@@ -1,0 +1,94 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    font-family: "Pretendard Variable", Pretendard, -apple-system,
+      BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+      "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-weight: 400;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  #check {
+    display: none;
+  }
+}
+
+@layer components {
+  .heading-1 {
+    @apply text-[1.5rem] font-bold leading-[130%] tracking-[-0.0125rem] lg:text-[2rem];
+  }
+
+  .heading-2 {
+    @apply text-[1.375rem] font-bold leading-[130%] tracking-[0rem] lg:text-[1.5rem];
+  }
+
+  .heading-3 {
+    @apply text-[1.25rem] font-semibold leading-[130%] tracking-[0rem] lg:text-[1.25rem];
+  }
+
+  .heading-4 {
+    @apply text-[1.125rem] font-semibold leading-[130%] tracking-[0rem] lg:text-[1.125rem];
+  }
+
+  .title-1 {
+    @apply text-[1rem] font-bold leading-[150%] tracking-[0rem] lg:text-[1.125rem];
+  }
+
+  .body-1 {
+    @apply text-[1rem] font-normal leading-[150%] tracking-[0rem] lg:text-[1.125rem];
+  }
+
+  .title-2 {
+    @apply text-[0.875rem] font-bold leading-[150%] tracking-[0rem] lg:text-[1rem];
+  }
+
+  .body-2 {
+    @apply text-[0.875rem] font-normal leading-[150%] tracking-[0.00625rem] lg:text-[1rem];
+  }
+
+  .label-1 {
+    @apply text-[0.75rem] font-bold leading-[130%] tracking-[0.00625rem] lg:text-[0.875rem];
+  }
+
+  .label-2 {
+    @apply text-[0.625rem] font-medium leading-[130%] tracking-[0.0125rem] lg:text-[0.75rem];
+  }
+
+  .caption {
+    @apply text-[0.75rem] font-normal leading-[150%] tracking-[0.025rem];
+  }
+}
