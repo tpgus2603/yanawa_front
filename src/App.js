@@ -7,19 +7,28 @@ import HomePage from "./pages/HomePage";
 import TimeTablePage from "./pages/TimeTablePage";
 import ChattingListPage from "./pages/Chatting/ChattingListPage";
 import MyPage from "./pages/Mypage";
+import HeaderNav from "./components/layout/HeaderNav";
+import Footer from "./components/layout/Footer";
+import BodyLayout from "./components/layout/BodyLayout";
+import HeaderLogoBar from "./components/layout/HeaderLogoBar";
 
 const App = () => {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100">
-        <Routes className>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/timetable" element={<TimeTablePage />} />
-          <Route path="/chattinglist" element={<ChattingListPage />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
+        <HeaderLogoBar />
+        <HeaderNav />
+        <BodyLayout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/timetable" element={<TimeTablePage />} />
+            <Route path="/chattinglist" element={<ChattingListPage />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </BodyLayout>
+        <Footer />
       </div>
     </Router>
   );
