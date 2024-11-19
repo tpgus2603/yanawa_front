@@ -60,11 +60,15 @@ export default function Button({
               : "flex h-[1.5rem] w-[1.5rem] items-center justify-center"
           }
         >
-          <img
-            src={icon}
-            alt="icon"
-            className={children ? "w-5 h-5" : "w-6 h-6"}
-          />
+          <div
+            className={
+              children
+                ? "flex items-center justify-center w-6 h-6"
+                : "flex items-center justify-center w-7 h-7"
+            }
+          >
+            {icon}
+          </div>
         </div>
       )}
       {children}
