@@ -26,7 +26,7 @@ deploy:
     - chmod 600 ~/.ssh/id_rsa.pem
   script:
     # EC2에 파일 업로드 및 Nginx 재시작
-    - scp -i ~/.ssh/id_rsa.pem -r build/* $SSH_USER@$EC2_HOST:/var/www/html
-    - ssh -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo systemctl reload nginx"
+    - scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem -r build/* $SSH_USER@$EC2_HOST:/var/www/html
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo systemctl reload nginx"
   only:
     - main  # main 브랜치에 푸시될 때만 실행
