@@ -1,0 +1,22 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: node:16
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+
+deploy:
+  stage: deploy
+  script:
+    - apt-get update -y
+    - apt-get install -y rsync openssh-client
+    - rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ec2-user@your-ec2-ip:/var/www/html/
+  only:
+    - main
