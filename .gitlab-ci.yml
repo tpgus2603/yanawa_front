@@ -6,21 +6,25 @@ build:
   stage: build
   image: node:16
   script:
+    # React 프로젝트 설치 및 빌드
     - npm install
     - npm run build
   artifacts:
     paths:
-      - build/
+      - build/ # 빌드 결과물을 아티팩트로 저장
 
 deploy:
   stage: deploy
-  image: bitnami/ssh:latest
+  image: alpine:latest
   before_script:
-    # Base64 디코딩 후 .pem 파일 생성
+    # SSH 클라이언트 설치
+    - apk add --no-cache openssh
+    # Base64로 인코딩된 SSH 키 디코딩 및 파일 생성
     - echo "$SSH_PEM_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa.pem
     - chmod 600 ~/.ssh/id_rsa.pem
   script:
+    # EC2에 파일 업로드 및 Nginx 재시작
     - scp -i ~/.ssh/id_rsa.pem -r build/* $SSH_USER@$EC2_HOST:/var/www/html
     - ssh -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo systemctl reload nginx"
   only:
-    - main
+    - main  # main 브랜치에 푸시될 때만 실행
