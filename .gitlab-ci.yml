@@ -19,6 +19,8 @@ deploy:
   before_script:
     # SSH 클라이언트 설치
     - apk add --no-cache openssh
+    # .ssh 디렉토리 생성
+    - mkdir -p ~/.ssh
     # Base64로 인코딩된 SSH 키 디코딩 및 파일 생성
     - echo "$SSH_PEM_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa.pem
     - chmod 600 ~/.ssh/id_rsa.pem
