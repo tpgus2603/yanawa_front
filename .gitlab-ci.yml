@@ -2,6 +2,9 @@ stages:
   - build
   - deploy
 
+variables:
+  SSH_KEY_PATH: "~/.ssh/id_rsa" # SSH 키 경로
+
 build:
   stage: build
   image: node:16
@@ -14,9 +17,14 @@ build:
 
 deploy:
   stage: deploy
-  script:
+  before_script:
     - apt-get update -y
     - apt-get install -y rsync openssh-client
-    - rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./build/ ec2-user@your-ec2-ip:/var/www/html/
+    - mkdir -p ~/.ssh
+    - echo "$DEPLOY_KEY" > $SSH_KEY_PATH
+    - chmod 600 $SSH_KEY_PATH
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+  script:
+    - rsync -avz -e "ssh -i $SSH_KEY_PATH" ./build/ $EC2_SERVER_ADDRESS:/var/www/html/
   only:
     - main
