@@ -25,8 +25,11 @@ deploy:
     - echo "$SSH_PEM_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa.pem
     - chmod 600 ~/.ssh/id_rsa.pem
   script:
-    # EC2에 파일 업로드 및 Nginx 재시작
+    # 원격 서버에 디렉토리 생성 및 권한 설정
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo mkdir -p /var/www/html && sudo chown -R $SSH_USER:$SSH_USER /var/www/html"
+    # 파일 업로드
     - scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem -r build/* $SSH_USER@$EC2_HOST:/var/www/html
+    # Nginx 재시작
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo systemctl reload nginx"
   only:
     - main  # main 브랜치에 푸시될 때만 실행
