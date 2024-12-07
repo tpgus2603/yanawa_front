@@ -5,6 +5,9 @@ stages:
 build:
   stage: build
   image: node:16
+  before_script:
+    # Base64로 인코딩된 환경변수를 디코딩하여 .env 파일 생성
+    - echo "$ENV_FILE_BASE64" | base64 -d > .env
   script:
     # React 프로젝트 설치 및 빌드
     - npm install
