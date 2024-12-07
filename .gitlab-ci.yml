@@ -30,6 +30,8 @@ deploy:
   script:
     # 원격 서버에 디렉토리 생성 및 권한 설정
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo mkdir -p /var/www/yanawa.shop && sudo chown -R $SSH_USER:$SSH_USER /var/www/yanawa.shop"
+    # Base64 디코딩으로 .env 파일 생성
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "echo '$ENV_FILE_BASE64' | base64 -d > /var/www/yanawa.shop/.env"
     # 파일 업로드
     - scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem -r build/* $SSH_USER@$EC2_HOST:/var/www/yanawa.shop
     # Nginx 재시작
