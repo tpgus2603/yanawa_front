@@ -1,5 +1,5 @@
 // api.js
-const baseURL = process.env.REACT_APP_BACKEND_BASE_URL;
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 // Fetch all schedules
 export const fetchAllSchedules = async () => {
