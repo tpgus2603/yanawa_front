@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import ChattingListPage from "./pages/Chatting/ChattingListPage";
+import ChattingDetailPage from "./pages/Chatting/ChattingDetailPage";
 import MyPage from "./pages/Mypage";
 import HeaderNav from "./components/layout/HeaderNav";
 import Footer from "./components/layout/Footer";
@@ -22,8 +23,10 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/timetable" element={<SchedulePage />} />
             <Route path="/chattinglist" element={<ChattingListPage />} />
+            <Route path="/chat/chatRoom/:chatRoomId" element={<ChattingDetailPage />} /> 상세 페이지 라우트 추가
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
           </Routes>
         </BodyLayout>
         <Footer />
