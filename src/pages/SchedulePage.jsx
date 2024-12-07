@@ -188,10 +188,8 @@ const SchedulePage = () => {
     if (!selectedSchedule) return;
 
     try {
-      const body = { title: selectedSchedule.title };
-
       // API 호출 준비가 되었을 때 사용:
-      await deleteSchedule(body);
+      await deleteSchedule(selectedSchedule.title);
 
       const updatedSchedules = await fetchAllSchedules();
       setSchedules(updatedSchedules);
