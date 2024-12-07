@@ -3,7 +3,7 @@ import Label from "../components/Label";
 import {
   createSchedule,
   deleteSchedule,
-  fetchScheduleByTimeIndex,
+  // fetchScheduleByTimeIndex,
   fetchAllSchedules,
   updateSchedule,
 } from "../api/schedule";
@@ -74,34 +74,34 @@ const SchedulePage = () => {
     if (!isEditMode) return;
 
     // API
-    try {
-      const response = await fetchScheduleByTimeIndex(timeIdx);
-      if (response && response.data && response.data.schedule) {
-        setSelectedSchedule(response.data.schedule); // API로 가져온 스케줄 설정
-      } else {
-        console.error("No schedule found for time index:", timeIdx);
-      }
-    } catch (error) {
-      console.error("Failed to fetch schedule for time index:", timeIdx, error);
-    }
+    // try {
+    //   const response = await fetchScheduleByTimeIndex(timeIdx);
+    //   if (response && response.data && response.data.schedule) {
+    //     setSelectedSchedule(response.data.schedule); // API로 가져온 스케줄 설정
+    //   } else {
+    //     console.error("No schedule found for time index:", timeIdx);
+    //   }
+    // } catch (error) {
+    //   console.error("Failed to fetch schedule for time index:", timeIdx, error);
+    // }
 
     // 임시 코드
-    // const slotInSchedule = schedules.find((s) =>
-    //   s.time_indices.includes(timeIdx)
-    // );
+    const slotInSchedule = schedules.find((s) =>
+      s.time_indices.includes(timeIdx)
+    );
 
-    // if (slotInSchedule) {
-    //   if (selectedSlots.length === 0) {
-    //     setSelectedSchedule(slotInSchedule);
-    //   }
-    //   return;
-    // }
+    if (slotInSchedule) {
+      if (selectedSlots.length === 0) {
+        setSelectedSchedule(slotInSchedule);
+      }
+      return;
+    }
 
-    // if (selectedSlots.includes(timeIdx)) {
-    //   setSelectedSlots((prev) => prev.filter((idx) => idx !== timeIdx));
-    // } else {
-    //   setSelectedSlots((prev) => [...prev, timeIdx]);
-    // }
+    if (selectedSlots.includes(timeIdx)) {
+      setSelectedSlots((prev) => prev.filter((idx) => idx !== timeIdx));
+    } else {
+      setSelectedSlots((prev) => [...prev, timeIdx]);
+    }
   };
 
   const handleCancelSchedule = () => {
@@ -188,10 +188,8 @@ const SchedulePage = () => {
     if (!selectedSchedule) return;
 
     try {
-      const body = { title: selectedSchedule.title };
-
       // API 호출 준비가 되었을 때 사용:
-      await deleteSchedule(body);
+      await deleteSchedule(selectedSchedule.title);
 
       const updatedSchedules = await fetchAllSchedules();
       setSchedules(updatedSchedules);
