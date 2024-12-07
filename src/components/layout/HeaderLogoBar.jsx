@@ -38,20 +38,6 @@ const HeaderLogoBar = () => {
           </Button>
         )}
       </div>
-
-      {/* 오른쪽: 사용자 이름 */}
-      <div className="flex items-center">
-        <span className="text-gray-600 label-1">
-          {user ? `${user.name}` : "guest"} 님
-        </span>
-      </div>
-
-      {/* 오른쪽: 사용자 이름 */}
-      <div className="flex items-center">
-        <span className="text-gray-600 label-1">
-          {user ? `${user.name}` : "guest"} 님
-        </span>
-      </div>
     </div>
   );
 };
