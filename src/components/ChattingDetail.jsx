@@ -4,6 +4,8 @@ import './ChattingDetail.css';
 import styled, { keyframes } from 'styled-components';
 import { FaSearch, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import Button from "../components/Button";
+import ChattingNoticeDetailModal from '../components/ChattingNoticeDetailModal';
+import ChattingNoticeListModal from '../components/ChattingNoticeListModal';
 
 // 흔들리는 애니메이션을 위한 keyframes 정의
 const shakeAnimation = keyframes`
@@ -57,9 +59,9 @@ const SearchBar = styled.div`
 
 const ChatRoomMessages = styled.div`
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* 메시지 영역만 스크롤 가능 */
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 10px; /* 검색 바와 메시지 사이 여백 */
 `;
 
 const MessageContainer = styled.div`
@@ -140,13 +142,59 @@ const FixedSearchBar = styled(SearchBar)`
   border-bottom: 1px solid #ddd;
 `;
 
+const NoticeContainer = styled.div`
+  background-color: ${({ isCollapsed }) => (isCollapsed ? "transparent" : "#f8f9fa")};
+  padding: ${({ isCollapsed }) => (isCollapsed ? "0" : "10px")};
+  border-bottom: ${({ isCollapsed }) => (isCollapsed ? "none" : "1px solid #ddd")};
+  position: relative; /* 확성기 위치 조정을 위해 사용 */
+`;
+
+const NoticeMessage = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* 최대 3줄까지만 표시 */
+  white-space: normal;
+  height: calc(1.3em * 3); /* 3줄 높이로 제한 */
+  cursor: pointer;
+  margin-bottom: -30px; /* 메시지와 작성자 사이 간격 */
+`;
+
+const NoticeSender = styled.div`
+  font-size: 0.875rem;
+  color: #888;
+  text-align: left;
+`;
+
+const NoticeActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  gap: 10px;
+
+  button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #e7e7e7;
+    color: #555;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+
+  button:hover {
+    background-color: #d6d6d6;
+  }
+`;
+
 function ChattingDetail() {
   const { chatRoomId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { nickname, chatRoomName } = location.state;
 
-  const [notice, setNotice] = useState(null); // 공지 메시지  
+  // const [notice, setNotice] = useState(null); // 공지 메시지  
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -156,10 +204,21 @@ function ChattingDetail() {
   const [loggedInUser, setLoggedInUser] = useState(nickname);
   const [chatUnread, setChatUnread] = useState({});
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+  const [notice, setNotice] = useState(null); // 공지 메시지  
+  const [isNoticeVisible, setIsNoticeVisible] = useState(true); // 공지 표시 여부
+  const [isNoticeCollapsed, setIsNoticeCollapsed] = useState(false); // 공지 접힘 여부
+  const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
+  const [isNoticeDetailModalOpen, setIsNoticeDetailModalOpen] = useState(false); // 공지 상세 모달 상태
+  const [selectedNotice, setSelectedNotice] = useState(null); // 선택된 공지
+  const [notices, setNotices] = useState([]); // 공지사항 목록
+  const [isFloatingNoticeVisible, setIsFloatingNoticeVisible] = useState(false);
+
   const chatRoomMessagesRef = useRef(null); // 메시지 컨테이너 참조
+  const ws = useRef(null);
+  const messagesEndRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const highlightedMessageRef = useRef(null);
   
-
-
   let reconnectAttempts = 0;
   const MAX_RECONNECT_ATTEMPTS = 5;
   let isTabActive = true; // 브라우저 탭 상태를 저장
@@ -192,6 +251,35 @@ function ChattingDetail() {
     },
     [chatUnread]
   );
+
+  const handleNoticeClick = () => {
+    setSelectedNotice(notice); // 현재 공지사항을 선택
+    setIsNoticeDetailModalOpen(true); // 상세 모달 열기
+  };
+
+  const closeNoticeDetailModal = () => {
+    setIsNoticeDetailModalOpen(false); // 상세 모달 닫기
+  };
+
+  const handleNoticeCollapse = () => {
+    setIsNoticeCollapsed(true); // 공지를 접음
+  };
+
+  const handleMegaphoneClick = () => {
+    setIsNoticeCollapsed(false); // 공지를 펼침
+  };
+
+  const handleDismissNotice = () => {
+    const dismissedNotices = JSON.parse(localStorage.getItem('dismissedNotices')) || [];
+    
+    // 현재 공지사항이 로컬 스토리지에 추가되도록 처리
+    if (notice && !dismissedNotices.includes(notice.message)) {
+      dismissedNotices.push(notice.message);
+      localStorage.setItem('dismissedNotices', JSON.stringify(dismissedNotices));
+    }
+
+    setIsNoticeVisible(false); // 공지를 숨김
+  };
 
   const fetchUnreadCounts = async () => {
     try {
@@ -244,12 +332,6 @@ function ChattingDetail() {
     }
   };
 
-  useEffect(() => {
-    // 공지가 변경되면 렌더링
-    console.log('공지사항 업데이트:', notice);
-  }, [notice]);
-
-
   const handleRightClick = async (e, messageData) => {
     e.preventDefault();
     if (window.confirm("이 메시지를 공지로 설정하시겠습니까?")) {
@@ -292,32 +374,6 @@ function ChattingDetail() {
       }
     }
   };
-  
-  
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      updateUserStatusAndLogId(false);
-      if (ws.current) {
-        ws.current.close(); // WebSocket 연결 종료
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload); // 브라우저 종료/새로고침 이벤트 리스너 추가
-
-    return () => {
-      console.log("페이지 이동시 상태 업데이트");
-      updateUserStatusAndLogId(false); // 페이지 이동 시 상태 업데이트
-      window.removeEventListener('beforeunload', handleBeforeUnload); // 컴포넌트 언마운트 시 이벤트 리스너 제거
-      if (ws.current) {
-        ws.current.close(); // WebSocket 연결 종료
-      }
-    };
-  }, [chatRoomId]); // chatRoomId 변경 또는 컴포넌트 언마운트 시 실행
-
-  const ws = useRef(null);
-  const messagesEndRef = useRef(null);
-  const searchInputRef = useRef(null);
-  const highlightedMessageRef = useRef(null);
 
   // // 새로운 메시지가 왔을 때만 스크롤
   // useEffect(() => {
@@ -337,30 +393,28 @@ function ChattingDetail() {
   // };
 
   const fetchLatestNotice = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/chat/${chatRoomId}/notices/latest`);
-        if (response.ok) {
-          const latestNotice = await response.json();
+    try {
+      const response = await fetch(`http://localhost:8080/api/chat/${chatRoomId}/notices/latest`);
+      if (response.ok) {
+        const latestNotice = await response.json();
 
-          const dismissedNotices = JSON.parse(localStorage.getItem('dismissedNotices')) || [];
-          const isDismissed = dismissedNotices.includes(latestNotice.message);
+        const dismissedNotices = JSON.parse(localStorage.getItem('dismissedNotices')) || [];
+        const isDismissed = dismissedNotices.includes(latestNotice.message);
 
-          setNotice(latestNotice); // 최신 공지 업데이트
-          setIsNoticeVisible(!isDismissed); // 숨겨진 공지가 아니면 표시
-        } else if (response.status === 404) {
-          setNotice(null); // 공지가 없는 경우 처리
-          setIsNoticeVisible(false);
-        } else {
-          console.error('Failed to fetch latest notice');
-        }
-      } catch (error) {
-        console.error('Error fetching latest notice:', error);
+        // 새로운 공지라면 표시하고, 숨겨진 공지가 아니라면 표시
+        setNotice(latestNotice);
+        setIsNoticeVisible(!isDismissed);
+      } else if (response.status === 404) {
+        // 공지가 없는 경우 처리
+        setNotice(null);
+        setIsNoticeVisible(false);
+      } else {
+        console.error('Failed to fetch latest notice');
       }
+    } catch (error) {
+      console.error('Error fetching latest notice:', error);
+    }
   };
-
-  useEffect(() => {
-    fetchLatestNotice();
-  }, [chatRoomId]); // 채팅방 ID가 변경될 때마다 공지사항 업데이트
 
   const scrollToHighlightedMessage = () => {
     if (highlightedMessageRef.current) {
@@ -488,8 +542,6 @@ function ChattingDetail() {
     }
     
   };
-
-  
 
   // 채팅방에서 퇴장
   const leaveRoom = () => {
@@ -653,6 +705,53 @@ function ChattingDetail() {
     setLoggedInUser(nickname);
   }, [chatRoomId, nickname]);
 
+  useEffect(() => {
+    fetchLatestNotice();
+  }, [chatRoomId]); // 채팅방 ID가 변경될 때마다 공지사항 업데이트
+
+  useEffect(() => {
+    // 공지사항 목록 가져오기
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/chat/${chatRoomId}/notices`);
+        if (response.ok) {
+          const data = await response.json();
+          setNotices(data); // 공지사항 목록 업데이트
+        } else {
+          console.error('Failed to fetch notices');
+        }
+      } catch (error) {
+        console.error('Error fetching notices:', error);
+      }
+    };
+    fetchNotices();
+  }, [chatRoomId]);
+
+  useEffect(() => {
+    // 공지가 변경되면 렌더링
+    console.log('공지사항 업데이트:', notice);
+  }, [notice]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      updateUserStatusAndLogId(false);
+      if (ws.current) {
+        ws.current.close(); // WebSocket 연결 종료
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload); // 브라우저 종료/새로고침 이벤트 리스너 추가
+
+    return () => {
+      console.log("페이지 이동시 상태 업데이트");
+      updateUserStatusAndLogId(false); // 페이지 이동 시 상태 업데이트
+      window.removeEventListener('beforeunload', handleBeforeUnload); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+      if (ws.current) {
+        ws.current.close(); // WebSocket 연결 종료
+      }
+    };
+  }, [chatRoomId]); // chatRoomId 변경 또는 컴포넌트 언마운트 시 실행
+
   const highlightSearchTerm = (message) => {
     if (!searchTerm) return message;
 
@@ -673,7 +772,7 @@ function ChattingDetail() {
   return (
     <ChatRoomContainer>
       <ChatRoomHeader>
-        <h1>채팅방: {chatRoomName}</h1>
+        <h1 className="heading-1 text-gray-800">{chatRoomName}</h1>
         {/* 검색 버튼 */}
         <Button
           size="lg"
@@ -684,6 +783,62 @@ function ChattingDetail() {
           
         </Button>
       </ChatRoomHeader>
+
+      {/* 공지사항 */}
+      {isNoticeVisible && notice && (
+        <NoticeContainer isCollapsed={isNoticeCollapsed}>
+          {!isNoticeCollapsed ? (
+            <>
+              <NoticeMessage isCollapsed={isNoticeCollapsed} onClick={handleNoticeClick}>
+                📢 {notice?.message}
+              </NoticeMessage>
+              <NoticeSender>
+                {notice?.sender}
+              </NoticeSender>
+              <NoticeActions>
+                <button onClick={handleNoticeCollapse}>접어두기</button>
+                <button onClick={handleDismissNotice}>다시 열지 않음</button>
+              </NoticeActions>
+            </>
+          ) : (
+            <Button
+              size="lg"
+              theme="mix"
+              onClick={handleMegaphoneClick}
+              style={{
+                position: "absolute",
+                bottom: "-100px",
+                right: "30px",
+                zIndex: "20",
+              }}
+            >
+              📢
+            </Button>
+          )}
+        </NoticeContainer>
+      )}
+
+      {/* 공지사항 상세 모달 */}
+      {isNoticeDetailModalOpen && (
+        <ChattingNoticeDetailModal
+          initialNotice={selectedNotice} // 처음 표시할 공지사항
+          notices={notices}
+          onClose={closeNoticeDetailModal}
+          onSelectNotice={(notice) => setSelectedNotice(notice)}
+        />
+      )}
+
+      {/* 공지사항 목록 모달 */}
+      {isNoticeModalOpen && (
+        <ChattingNoticeListModal
+          notices={notices}
+          onClose={() => setIsNoticeModalOpen(false)}
+          onNoticeClick={(notice) => {
+            setSelectedNotice(notice);
+            setIsNoticeDetailModalOpen(true);
+          }}
+        />
+      )}
 
       {isSearching && (
       <FixedSearchBar>
