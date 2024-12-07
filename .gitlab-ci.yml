@@ -1,0 +1,35 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: node:16
+  script:
+    # React 프로젝트 설치 및 빌드
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build/ # 빌드 결과물을 아티팩트로 저장
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    # SSH 클라이언트 설치
+    - apk add --no-cache openssh
+    # .ssh 디렉토리 생성
+    - mkdir -p ~/.ssh
+    # Base64로 인코딩된 SSH 키 디코딩 및 파일 생성
+    - echo "$SSH_PEM_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa.pem
+    - chmod 600 ~/.ssh/id_rsa.pem
+  script:
+    # 원격 서버에 디렉토리 생성 및 권한 설정
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo mkdir -p /var/www/yanawa.shop && sudo chown -R $SSH_USER:$SSH_USER /var/www/yanawa.shop"
+    # 파일 업로드
+    - scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem -r build/* $SSH_USER@$EC2_HOST:/var/www/yanawa.shop
+    # Nginx 재시작
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.pem $SSH_USER@$EC2_HOST "sudo systemctl reload nginx"
+  only:
+    - main  # main 브랜치에 푸시될 때만 실행
