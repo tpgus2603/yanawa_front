@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import LogoIcon from "../icons/LogoIcon";
+import useAuthStore from "../../store/authStore";
 
 export default function HeaderNav() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
+  const { user } = useAuthStore(); // Zustand에서 user 상태 가져오기
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -18,6 +20,7 @@ export default function HeaderNav() {
   const navigateToHome = () => navigate("/");
   const navigateToChattingList = () => navigate("/chattinglist");
   const navigateToLogin = () => navigate("/login");
+  const navigateToMyPage = () => navigate("/mypage");
 
   return (
     <header className="bg-white shadow-md">
@@ -47,20 +50,14 @@ export default function HeaderNav() {
                 size="icon"
                 theme="black"
                 icon={<LogoIcon fillColor="#ffffff" />}
-                onClick={navigateToLogin}
+                onClick={user ? navigateToMyPage : navigateToLogin} // 조건부 이동
               />
             </>
           ) : (
             <>
               <Button
-                size="icon"
-                theme="pink"
-                icon={<LogoIcon fillColor="#ffffff" />}
-                onClick={navigateToHome}
-              />
-              <Button
                 size="lg"
-                theme="purple"
+                theme="pink"
                 icon={<LogoIcon fillColor="#ffffff" />}
                 onClick={navigateToHome}
               >
@@ -68,7 +65,7 @@ export default function HeaderNav() {
               </Button>
               <Button
                 size="lg"
-                theme="indigo"
+                theme="purple"
                 icon={<LogoIcon fillColor="#ffffff" />}
                 onClick={navigateToTimeTable}
               >
@@ -82,14 +79,25 @@ export default function HeaderNav() {
               >
                 번개채팅방
               </Button>
-              <Button
-                size="lg"
-                theme="black"
-                icon={<LogoIcon fillColor="#ffffff" />}
-                onClick={navigateToLogin}
-              >
-                로그인
-              </Button>
+              {user ? (
+                <Button
+                  size="lg"
+                  theme="black"
+                  icon={<LogoIcon fillColor="#ffffff" />}
+                  onClick={navigateToMyPage}
+                >
+                  마이페이지
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  theme="black"
+                  icon={<LogoIcon fillColor="#ffffff" />}
+                  onClick={navigateToLogin}
+                >
+                  로그인
+                </Button>
+              )}
             </>
           )}
         </div>
