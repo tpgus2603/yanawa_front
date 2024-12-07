@@ -2,7 +2,6 @@ import React from "react";
 import "./styles/globals.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
 import ChattingListPage from "./pages/Chatting/ChattingListPage";
 import MyPage from "./pages/Mypage";
@@ -25,7 +24,6 @@ const App = () => {
             <Route path="/chattinglist" element={<ChattingListPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
           </Routes>
         </BodyLayout>
         <Footer />
