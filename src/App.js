@@ -4,13 +4,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
-import TimeTablePage from "./pages/TimeTablePage";
 import ChattingListPage from "./pages/Chatting/ChattingListPage";
 import MyPage from "./pages/Mypage";
 import HeaderNav from "./components/layout/HeaderNav";
 import Footer from "./components/layout/Footer";
 import BodyLayout from "./components/layout/BodyLayout";
 import HeaderLogoBar from "./components/layout/HeaderLogoBar";
+import SchedulePage from "./pages/SchedulePage";
 
 const App = () => {
   return (
@@ -21,7 +21,7 @@ const App = () => {
         <BodyLayout>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/timetable" element={<TimeTablePage />} />
+            <Route path="/timetable" element={<SchedulePage />} />
             <Route path="/chattinglist" element={<ChattingListPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/login" element={<LoginPage />} />
