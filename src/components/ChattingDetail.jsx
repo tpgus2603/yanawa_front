@@ -529,7 +529,7 @@ function ChattingDetail() {
 
   const updateLastReadAt = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}api/chat/update-read-status`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/update-read-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
