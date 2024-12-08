@@ -1,10 +1,10 @@
 import React from "react";
-import ChattingList from "../../components/ChattingList";
+import ChattingDetail from "../../components/ChattingDetail";
 
-export default function ChattingListPage() {
+export default function ChattingDetailPage() {
   return (
     <div className="flex flex-col items-center justify-center bg-white min-h-screen overflow-hidden">
-      <ChattingList />
+      <ChattingDetail />
     </div>
   );
 }
