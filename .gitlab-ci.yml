@@ -20,12 +20,13 @@ build:
 
 deploy:
   stage: deploy
-  image: alpine:latest
+  image: ubuntu:20.04 # Ubuntu 이미지 사용
   tags:
     - react 
   before_script:
-    # SSH 클라이언트 설치
-    - apk add --no-cache openssh
+    before_script:
+    # apt-get으로 openssh-client 설치
+    - apt-get update && apt-get install -y openssh-client
     # .ssh 디렉토리 생성
     - mkdir -p ~/.ssh
     # Base64로 인코딩된 SSH 키 디코딩 및 파일 생성
