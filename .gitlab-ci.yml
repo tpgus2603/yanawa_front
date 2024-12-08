@@ -24,7 +24,6 @@ deploy:
   tags:
     - react 
   before_script:
-    before_script:
     # apt-get으로 openssh-client 설치
     - apt-get update && apt-get install -y openssh-client
     # .ssh 디렉토리 생성
