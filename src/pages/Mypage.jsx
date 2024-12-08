@@ -4,6 +4,7 @@ import {
   getReceivedFriendRequests,
   sendFriendRequest,
   getAllFriends,
+  getSentFriendRequests,
   acceptFriendRequest,
   rejectFriendRequest,
   deleteFriend,
@@ -74,6 +75,20 @@ const MyPage = () => {
 
     if (activeTab === "lightning") fetchMeetings();
   }, [activeTab, meetingPage, meetingHasNext, meetingIsLoading]);
+
+  // 보낸 친구 요청 조회
+  useEffect(() => {
+    const fetchSentRequests = async () => {
+      try {
+        const data = await getSentFriendRequests();
+        setSentRequests(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Failed to fetch sent requests:", error);
+      }
+    };
+    if (activeTab === "friends") fetchSentRequests();
+  }, [activeTab]);
 
   // 받은 친구 요청 조회
   useEffect(() => {
@@ -303,30 +318,34 @@ const MyPage = () => {
           <div>
             <h2 className="mb-2 text-lg font-bold">친구 목록</h2>
             <div className="space-y-4">
-              {friends.map((friend) => (
-                <div
-                  key={friend.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div>
-                    <h3 className="font-semibold text-md">
-                      {friend.friendInfo.name}
-                    </h3>
-                    <p className="text-[10px] tablet:text-sm text-gray-600">
-                      {friend.friendInfo.email}
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    theme="black"
-                    onClick={() => handleDeleteFriend(friend.id)}
+              {friends.length > 0 ? (
+                friends.map((friend) => (
+                  <div
+                    key={friend.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
                   >
-                    삭제
-                  </Button>
-                </div>
-              ))}
+                    <div>
+                      <h3 className="font-semibold text-md">
+                        {friend?.friendInfo?.name || "알 수 없는 사용자"}
+                      </h3>
+                      <p className="text-[10px] tablet:text-sm text-gray-600">
+                        {friend?.friendInfo?.email || "이메일 정보 없음"}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      theme="black"
+                      onClick={() => handleDeleteFriend(friend.id)}
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center">친구 목록이 비어 있습니다.</p>
+              )}
               {isLoading && <p>로딩 중...</p>}
-              {!hasNext && (
+              {!hasNext && friends.length > 0 && (
                 <p className="text-center label-2">더 이상 친구가 없습니다.</p>
               )}
             </div>
