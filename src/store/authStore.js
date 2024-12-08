@@ -11,7 +11,13 @@ const useAuthStore = create((set) => ({
     try {
       const userInfo = await getSessionInfo();
       set({ user: userInfo });
-      localStorage.setItem("user", { user: userInfo });
+      localStorage.setItem("user", userInfo);
+      const nickname = userInfo.name || "Unknown";
+      localStorage.setItem("nickname", nickname);
+      console.log("반환값 userInfo: " + userInfo);
+      const localuser = localStorage.getItem("user");
+      console.log("user: " + localuser);
+      console.log("nickname: " + nickname);
     } catch (error) {
       console.error("Failed to fetch session info:", error);
       set({ user: null });
@@ -26,6 +32,7 @@ const useAuthStore = create((set) => ({
       await logout();
       set({ user: null });
       localStorage.removeItem("user");
+      localStorage.removeItem("nickname");
     } catch (error) {
       console.error("Failed to logout:", error);
     }
