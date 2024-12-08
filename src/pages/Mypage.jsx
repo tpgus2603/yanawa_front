@@ -29,6 +29,7 @@ const MyPage = () => {
   const [meetingPage, setMeetingPage] = useState(0);
   const [meetingHasNext, setMeetingHasNext] = useState(true);
   const [meetingIsLoading, setMeetingIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ const MyPage = () => {
   // 번개 모임 가져오기
   useEffect(() => {
     const fetchMeetings = async () => {
-      if (!meetingHasNext || meetingIsLoading) return;
+      if (!meetingHasNext || meetingIsLoading || hasError) return;
 
       try {
         setMeetingIsLoading(true);
@@ -64,6 +65,7 @@ const MyPage = () => {
         setMeetingHasNext(data.meetingHasNext);
         setMeetingPage((prev) => prev + 1);
       } catch (error) {
+        setHasError(true);
         console.error("Failed to fetch meetings:", error);
       } finally {
         setIsLoading(false);
@@ -89,7 +91,7 @@ const MyPage = () => {
   // 친구 목록 무한스크롤 처리
   useEffect(() => {
     const fetchFriends = async () => {
-      if (!hasNext || isLoading) return;
+      if (!hasNext || isLoading || hasError) return;
 
       try {
         setIsLoading(true);
@@ -104,6 +106,7 @@ const MyPage = () => {
         setHasNext(nextPage);
         setPage((prev) => prev + 1);
       } catch (error) {
+        setHasError(true);
         console.error("Failed to fetch friends:", error);
       } finally {
         setIsLoading(false);
@@ -277,14 +280,14 @@ const MyPage = () => {
                     <Button
                       size="sm"
                       theme="indigo"
-                      onClick={() => handleAcceptRequest(request.id)}
+                      onClick={() => handleAcceptRequest(request.requester.id)}
                     >
                       수락
                     </Button>
                     <Button
                       size="sm"
                       theme="pink"
-                      onClick={() => handleRejectRequest(request.id)}
+                      onClick={() => handleRejectRequest(request.requester.id)}
                     >
                       거절
                     </Button>

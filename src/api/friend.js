@@ -27,7 +27,9 @@ export const sendFriendRequest = async (requestData) => {
  * @returns {Promise<Object[]>} - 받은 친구 요청 리스트
  */
 export const getReceivedFriendRequests = async () => {
-  const response = await fetch(`${BASE_URL}/api/friend/requests/received`);
+  const response = await fetch(`${BASE_URL}/api/friend/requests/received`, {
+    method: "GET",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch received friend requests");
@@ -41,7 +43,9 @@ export const getReceivedFriendRequests = async () => {
  * @returns {Promise<Object[]>} - 보낸 친구 요청 리스트
  */
 export const getSentFriendRequests = async () => {
-  const response = await fetch(`${BASE_URL}/api/friend/requests/sent`);
+  const response = await fetch(`${BASE_URL}/api/friend/requests/sent`, {
+    method: "GET",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch sent friend requests");
@@ -98,7 +102,10 @@ export const rejectFriendRequest = async (requestId) => {
  */
 export const getAllFriends = async (page = 0, size = 10) => {
   const response = await fetch(
-    `${BASE_URL}/api/friend/all?page=${page}&size=${size}`
+    `${BASE_URL}/api/friend/all?page=${page}&size=${size}`,
+    {
+      method: "GET",
+    }
   );
 
   if (!response.ok) {
