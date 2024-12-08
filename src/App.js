@@ -12,6 +12,7 @@ import BodyLayout from "./components/layout/BodyLayout";
 import HeaderLogoBar from "./components/layout/HeaderLogoBar";
 import SchedulePage from "./pages/SchedulePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import MeetingPage from "./pages/MeetingPage";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="/meeting" element={<MeetingPage />} />
           </Routes>
         </BodyLayout>
         <Footer />

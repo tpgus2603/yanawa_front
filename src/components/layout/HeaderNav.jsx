@@ -21,7 +21,8 @@ export default function HeaderNav() {
 
   const navigateToTimeTable = () => navigate("/timetable");
   const navigateToHome = () => navigate("/");
-  const navigateToChattingList = () => navigate("/chattinglist");
+  const navigateToChattingList = () => navigate("/chattings");
+  const navigateToMeetings = () => navigate("/meeting");
   const navigateToLogin = () => navigate("/login");
   const navigateToMyPage = () => navigate("/mypage");
 
@@ -87,7 +88,7 @@ export default function HeaderNav() {
                 size="lg"
                 theme="mix"
                 icon={<ChatIcon />}
-                onClick={navigateToChattingList}
+                onClick={navigateToMeetings}
               >
                 번개모임
               </Button>
