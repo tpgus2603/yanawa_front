@@ -11,6 +11,7 @@ import Footer from "./components/layout/Footer";
 import BodyLayout from "./components/layout/BodyLayout";
 import HeaderLogoBar from "./components/layout/HeaderLogoBar";
 import SchedulePage from "./pages/SchedulePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BodyLayout>
         <Footer />
