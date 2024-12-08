@@ -105,7 +105,8 @@ export const getAllFriends = async (page = 0, size = 10) => {
     throw new Error("Failed to fetch friends list");
   }
 
-  return (await response.json()).data.content;
+  // 전체 데이터를 반환
+  return (await response.json()).data;
 };
 
 /**

@@ -90,11 +90,18 @@ const MyPage = () => {
   useEffect(() => {
     const fetchFriends = async () => {
       if (!hasNext || isLoading) return;
+
       try {
         setIsLoading(true);
-        const data = await getAllFriends(page, 10);
-        setFriends((prev) => [...prev, ...data.content]);
-        setHasNext(data.hasNext);
+        const response = await getAllFriends(page, 10);
+
+        const content = Array.isArray(response?.content)
+          ? response.content
+          : [];
+        const nextPage = response?.hasNext ?? false;
+
+        setFriends((prev) => [...prev, ...content]);
+        setHasNext(nextPage);
         setPage((prev) => prev + 1);
       } catch (error) {
         console.error("Failed to fetch friends:", error);
@@ -102,6 +109,7 @@ const MyPage = () => {
         setIsLoading(false);
       }
     };
+
     if (activeTab === "friends") fetchFriends();
   }, [page, hasNext, activeTab, isLoading]);
 
