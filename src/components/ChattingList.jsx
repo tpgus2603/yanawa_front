@@ -116,10 +116,6 @@ function ChattingList() {
   }, [nickname]);
 
   const joinRoom = (chatRoomId, chatRoomName) => {
-    if (!nickname.trim()) {
-      alert("닉네임을 입력하세요.");
-      return;
-    }
     setUnreadCounts((prevUnreadCounts) => ({
       ...prevUnreadCounts,
       [chatRoomId]: 0,
