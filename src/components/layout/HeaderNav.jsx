@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import LogoIcon from "../icons/LogoIcon";
 import useAuthStore from "../../store/authStore";
+import ChatIcon from "../icons/ChatIcon";
+import GoogleLogoIcon from "../icons/GoogleLogoIcon";
+import CalendarIcon from "../icons/CalendarIcon";
 
 export default function HeaderNav() {
   const navigate = useNavigate();
@@ -37,21 +40,30 @@ export default function HeaderNav() {
               <Button
                 size="icon"
                 theme="purple"
-                icon={<LogoIcon fillColor="#ffffff" />}
+                icon={<CalendarIcon />}
                 onClick={navigateToTimeTable}
               />
               <Button
                 size="icon"
                 theme="mix"
-                icon={<LogoIcon fillColor="#ffffff" />}
+                icon={<ChatIcon />}
                 onClick={navigateToChattingList}
               />
-              <Button
-                size="icon"
-                theme="black"
-                icon={<LogoIcon fillColor="#ffffff" />}
-                onClick={user ? navigateToMyPage : navigateToLogin} // 조건부 이동
-              />
+              {user ? (
+                <Button
+                  size="icon"
+                  theme="black"
+                  icon={<LogoIcon fillColor="#ffffff" />}
+                  onClick={navigateToMyPage}
+                />
+              ) : (
+                <Button
+                  size="icon"
+                  theme="black"
+                  icon={<GoogleLogoIcon />}
+                  onClick={navigateToLogin}
+                />
+              )}
             </>
           ) : (
             <>
@@ -66,7 +78,7 @@ export default function HeaderNav() {
               <Button
                 size="lg"
                 theme="purple"
-                icon={<LogoIcon fillColor="#ffffff" />}
+                icon={<CalendarIcon />}
                 onClick={navigateToTimeTable}
               >
                 캘린더
@@ -74,7 +86,7 @@ export default function HeaderNav() {
               <Button
                 size="lg"
                 theme="mix"
-                icon={<LogoIcon fillColor="#ffffff" />}
+                icon={<ChatIcon />}
                 onClick={navigateToChattingList}
               >
                 번개채팅방
@@ -92,7 +104,7 @@ export default function HeaderNav() {
                 <Button
                   size="lg"
                   theme="black"
-                  icon={<LogoIcon fillColor="#ffffff" />}
+                  icon={<GoogleLogoIcon />}
                   onClick={navigateToLogin}
                 >
                   로그인
