@@ -20,6 +20,8 @@ build:
 
 deploy:
   stage: deploy
+  tags:
+    - react 
   image: alpine:latest
   before_script:
     # SSH 클라이언트 설치
