@@ -5,7 +5,16 @@
  * @returns {string} 로그인 엔드포인트 URL
  */
 export const getLoginUrl = () => {
-  return `${process.env.REACT_APP_BASE_URL}/api/auth/login`;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const fcmToken = localStorage.getItem("fcmToken");
+
+  // fcmToken이 있을 경우 파라미터에 추가
+  const params = new URLSearchParams();
+  if (fcmToken) {
+    params.append("fcmToken", fcmToken);
+  }
+
+  return `${baseUrl}/api/auth/login?${params.toString()}`;
 };
 
 /**
