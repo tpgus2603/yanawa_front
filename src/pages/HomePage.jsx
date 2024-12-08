@@ -12,7 +12,6 @@ import ChatIcon from "../components/icons/ChatIcon";
 
 const HomePage = () => {
   const { user, fetchSession } = useAuthStore(); // Zustand 상태 및 메서드 가져오기
-  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isPWAInstalled, setIsPWAInstalled] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -101,7 +100,7 @@ const HomePage = () => {
 
   //PWA 권한 허용 및 FCM 토큰 받아오기
   useEffect(() => {
-    GetUserPermission(setIsLoading);
+    GetUserPermission();
   }, []);
 
   useEffect(() => {
@@ -173,7 +172,7 @@ const HomePage = () => {
   };
 
   const handleAllowNotifications = () => {
-    GetUserPermission(setIsLoading);
+    GetUserPermission();
     setShowPushNotificationPrompt(false);
   };
 
