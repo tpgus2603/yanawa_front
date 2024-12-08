@@ -84,12 +84,6 @@ const NoticeContent = styled.div`
   }
 `;
 
-const CloseButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-`;
-
 const NoticeListContainer = styled.ul`
   list-style: none;
   padding: 0;

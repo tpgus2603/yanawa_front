@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 function ChattingList() {
   const [rooms, setRooms] = useState([]);
   const [joinedRooms, setJoinedRooms] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
-  const [nickname, setNickname] = useState(localStorage.getItem("nickname") || "");
+  const [nickname] = useState(localStorage.getItem("nickname") || "");
   const navigate = useNavigate();
   const ws = useRef(null);
 
@@ -18,28 +18,32 @@ function ChattingList() {
     };
 
     ws.current.onmessage = (event) => {
-      const messageData = JSON.parse(event.data);
+      try {
+        const messageData = JSON.parse(event.data);
 
-      // 메시지 타입에 따라 처리
-      if (messageData.type === 'message') {
-        // 해당 채팅방의 마지막 메시지와 읽지 않은 메시지 개수를 업데이트
-        console.log("마지막에 전송된 메시지", messageData);
-        const { chatRoomId, sender, message, timestamp } = messageData;
-        setRooms(prevRooms =>
-          prevRooms.map(room =>
-            room.chatRoomId === chatRoomId
-              ? {
-                  ...room,
-                  lastMessage: { sender, message, timestamp },
-                }
-              : room
-          )
-        );
-          
-        setUnreadCounts(prevUnreadCounts => ({
-          ...prevUnreadCounts,
-          [chatRoomId]: (prevUnreadCounts[chatRoomId] || 0) + 1, // 새로운 메시지가 도착할 때마다 개수 증가
-        }));
+        if (messageData.type === 'message') {
+          const { chatRoomId, sender, message, timestamp } = messageData;
+
+          // 마지막 메시지 업데이트
+          setRooms((prevRooms) =>
+            prevRooms.map((room) =>
+              room.chatRoomId === chatRoomId
+                ? {
+                    ...room,
+                    lastMessage: { sender, message, timestamp },
+                  }
+                : room
+            )
+          );
+
+          // 읽지 않은 메시지 개수 업데이트
+          setUnreadCounts((prevUnreadCounts) => ({
+            ...prevUnreadCounts,
+            [chatRoomId]: (prevUnreadCounts[chatRoomId] || 0) + 1,
+          }));
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
       }
     };
 
@@ -63,7 +67,23 @@ function ChattingList() {
     }
   };
 
-  const fetchUnreadMessages = async () => {
+  // const fetchUnreadMessages = async () => {
+  //   try {
+  //     const response = await fetch(`http://localhost:8080/api/chat/unread-messages/${nickname}`);
+  //     if (!response.ok) throw new Error("Failed to fetch unread messages");
+  //     const data = await response.json();
+  //     const joinedChatRoomIds = data.map((chatRoom) => chatRoom.chatRoomId);
+  //     const unreadCountsMap = data.reduce((acc, chatRoom) => {
+  //       acc[chatRoom.chatRoomId] = chatRoom.unreadCount;
+  //       return acc;
+  //     }, {});
+  //     setJoinedRooms(joinedChatRoomIds);
+  //     setUnreadCounts(unreadCountsMap);
+  //   } catch (err) {
+  //     console.error("Error fetching unread messages:", err);
+  //   }
+  // };
+  const fetchUnreadMessages = useCallback(async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/chat/unread-messages/${nickname}`);
       if (!response.ok) throw new Error("Failed to fetch unread messages");
@@ -78,7 +98,7 @@ function ChattingList() {
     } catch (err) {
       console.error("Error fetching unread messages:", err);
     }
-  };
+  }, [nickname]);
 
   const joinRoom = (chatRoomId, chatRoomName) => {
     if (!nickname.trim()) {
@@ -105,7 +125,7 @@ function ChattingList() {
     return () => {
       if (ws.current) ws.current.close();
     };
-  }, [nickname]);
+  }, [nickname, fetchUnreadMessages]);
 
   return (
     <div className="max-w-6xl mx-auto p-6 font-sans">

@@ -1,4 +1,4 @@
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import './ChattingDetail.css';
 import styled, { keyframes } from 'styled-components';
@@ -191,7 +191,6 @@ const NoticeActions = styled.div`
 function ChattingDetail() {
   const { chatRoomId } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const { nickname, chatRoomName } = location.state;
 
   // const [notice, setNotice] = useState(null); // 공지 메시지  
@@ -203,7 +202,7 @@ function ChattingDetail() {
   const [isSearching, setIsSearching] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(nickname);
   const [chatUnread, setChatUnread] = useState({});
-  const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+  // const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [notice, setNotice] = useState(null); // 공지 메시지  
   const [isNoticeVisible, setIsNoticeVisible] = useState(true); // 공지 표시 여부
   const [isNoticeCollapsed, setIsNoticeCollapsed] = useState(false); // 공지 접힘 여부
@@ -211,17 +210,17 @@ function ChattingDetail() {
   const [isNoticeDetailModalOpen, setIsNoticeDetailModalOpen] = useState(false); // 공지 상세 모달 상태
   const [selectedNotice, setSelectedNotice] = useState(null); // 선택된 공지
   const [notices, setNotices] = useState([]); // 공지사항 목록
-  const [isFloatingNoticeVisible, setIsFloatingNoticeVisible] = useState(false);
 
-  const chatRoomMessagesRef = useRef(null); // 메시지 컨테이너 참조
+  // const chatRoomMessagesRef = useRef(null); // 메시지 컨테이너 참조
   const ws = useRef(null);
   const messagesEndRef = useRef(null);
   const searchInputRef = useRef(null);
   const highlightedMessageRef = useRef(null);
+  const isTabActiveRef = useRef(true); // useRef로 상태 초기화
   
   let reconnectAttempts = 0;
   const MAX_RECONNECT_ATTEMPTS = 5;
-  let isTabActive = true; // 브라우저 탭 상태를 저장
+  // let isTabActive = true; // 브라우저 탭 상태를 저장
 
   const lastReadLogIdRef = useRef(null);
 
@@ -249,7 +248,7 @@ function ChattingDetail() {
 
       return Number(chatUnreadSortArray[chatUnreadSortArray.length - 1][0]);
     },
-    [chatUnread]
+    [chatUnreadSortArray]
   );
 
   const handleNoticeClick = () => {
@@ -504,13 +503,13 @@ function ChattingDetail() {
       console.warn('(클라이언트)WebSocket 연결이 종료되었습니다.', event);
 
       // 탭이 활성화된 상태에서만 재연결 시도
-      if (isTabActive && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+      if (isTabActiveRef.current && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
         setTimeout(() => {
           console.log(`WebSocket 재연결 시도 (${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS})`);
           reconnectAttempts++;
           joinRoom(); // 재연결 시도
         }, 2000); // 2초 후 재연결
-      } else if (!isTabActive) {
+      } else if (!isTabActiveRef.current) {
         console.log('브라우저 탭이 비활성화 상태입니다. WebSocket 재연결을 시도하지 않습니다.');
       } else {
         console.error('WebSocket 재연결 실패: 최대 시도 횟수를 초과했습니다.');
@@ -543,21 +542,21 @@ function ChattingDetail() {
     
   };
 
-  // 채팅방에서 퇴장
-  const leaveRoom = () => {
-    const leaveMessage = JSON.stringify({
-      type: 'leave',
-      chatRoomId,
-      nickname,
-    });
-    try {
-      ws.current.send(leaveMessage);  // 서버로 퇴장 메시지 전송
-      console.log('퇴장 메시지 전송:', leaveMessage);
-      ws.current.close();  // 웹소켓 연결 종료
-    } catch (error) {
-      console.error('퇴장 메시지 전송 오류:', error);
-    } 
-  };
+  // // 채팅방에서 퇴장
+  // const leaveRoom = () => {
+  //   const leaveMessage = JSON.stringify({
+  //     type: 'leave',
+  //     chatRoomId,
+  //     nickname,
+  //   });
+  //   try {
+  //     ws.current.send(leaveMessage);  // 서버로 퇴장 메시지 전송
+  //     console.log('퇴장 메시지 전송:', leaveMessage);
+  //     ws.current.close();  // 웹소켓 연결 종료
+  //   } catch (error) {
+  //     console.error('퇴장 메시지 전송 오류:', error);
+  //   } 
+  // };
 
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
@@ -665,19 +664,23 @@ function ChattingDetail() {
     return () => {
       if (ws.current) ws.current.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomId]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') { // 브라우저 탭이 비활성화되었을 때
-        isTabActive = false; // 탭 비활성화 상태로 설정
+        // isTabActive = false; // 탭 비활성화 상태로 설정
+        isTabActiveRef.current = false; // 탭 비활성화 상태로 설정
         updateUserStatusAndLogId(false);
         if (ws.current) {
           ws.current.close(); // WebSocket 연결 종료
           console.log('브라우저 탭 비활성화: WebSocket 연결 종료');
         }
       } else if (document.visibilityState === 'visible') { // 브라우저 탭이 다시 활성화되었을 때
-        isTabActive = true; // 탭 활성화 상태로 설정
+        // isTabActive = true; // 탭 활성화 상태로 설정
+        isTabActiveRef.current = false; // 탭 비활성화 상태로 설정
         updateUserStatusAndLogId(true);
         if (!ws.current || ws.current.readyState === WebSocket.CLOSED) {
           console.log('브라우저 탭 활성화: WebSocket 연결 재시작');
@@ -691,13 +694,14 @@ function ChattingDetail() {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomId]);
 
   useEffect(() => {
     if (searchResults.length > 0) {
       scrollToHighlightedMessage();
     }
-  }, [currentSearchIndex]);
+  }, [currentSearchIndex, searchResults.length]);
 
   useEffect(() => {
     console.log('chatRoomId:', chatRoomId);
@@ -707,6 +711,7 @@ function ChattingDetail() {
 
   useEffect(() => {
     fetchLatestNotice();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomId]); // 채팅방 ID가 변경될 때마다 공지사항 업데이트
 
   useEffect(() => {
@@ -750,6 +755,7 @@ function ChattingDetail() {
         ws.current.close(); // WebSocket 연결 종료
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomId]); // chatRoomId 변경 또는 컴포넌트 언마운트 시 실행
 
   const highlightSearchTerm = (message) => {
