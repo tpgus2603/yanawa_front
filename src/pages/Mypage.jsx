@@ -81,6 +81,7 @@ const MyPage = () => {
       try {
         const data = await getReceivedFriendRequests();
         setReceivedRequests(data);
+        console.log(data);
       } catch (error) {
         console.error("Failed to fetch received requests:", error);
       }
@@ -129,11 +130,11 @@ const MyPage = () => {
   };
 
   // 친구 요청 수락
-  const handleAcceptRequest = async (requestId) => {
+  const handleAcceptRequest = async (requesterId) => {
     try {
-      const response = await acceptFriendRequest(requestId);
+      const response = await acceptFriendRequest(requesterId);
       setReceivedRequests((prev) =>
-        prev.filter((request) => request.id !== requestId)
+        prev.filter((request) => request.requester.id !== requesterId)
       );
       setFriends((prev) => [response, ...prev]); // 친구 목록에 추가
     } catch (error) {
@@ -142,11 +143,11 @@ const MyPage = () => {
   };
 
   // 친구 요청 거절
-  const handleRejectRequest = async (requestId) => {
+  const handleRejectRequest = async (requesterId) => {
     try {
-      await rejectFriendRequest(requestId);
+      await rejectFriendRequest(requesterId);
       setReceivedRequests((prev) =>
-        prev.filter((request) => request.id !== requestId)
+        prev.filter((request) => request.requester.id !== requesterId)
       );
     } catch (error) {
       console.error("Failed to reject request:", error);
