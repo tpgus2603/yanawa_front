@@ -56,12 +56,12 @@ export const getSentFriendRequests = async () => {
 
 /**
  * 친구 요청 수락
- * @param {number} requestId - 친구 요청 ID
+ * @param {number} requesterId - 친구 요청을 보낸 사용자의 ID
  * @returns {Promise<Object>} - 수락된 친구 요청 데이터
  */
-export const acceptFriendRequest = async (requestId) => {
+export const acceptFriendRequest = async (requesterId) => {
   const response = await fetch(
-    `${BASE_URL}/api/friend/request/${requestId}/accept`,
+    `${BASE_URL}/api/friend/requests/${requesterId}/accept`,
     {
       method: "POST",
     }
@@ -76,12 +76,12 @@ export const acceptFriendRequest = async (requestId) => {
 
 /**
  * 친구 요청 거절
- * @param {number} requestId - 친구 요청 ID
+ * @param {number} requesterId - 친구 요청을 보낸 사용자의 ID
  * @returns {Promise<Object>} - 거절된 친구 요청 데이터
  */
-export const rejectFriendRequest = async (requestId) => {
+export const rejectFriendRequest = async (requesterId) => {
   const response = await fetch(
-    `${BASE_URL}/api/friend/request/${requestId}/reject`,
+    `${BASE_URL}/api/friend/requests/${requesterId}/reject`,
     {
       method: "POST",
     }
@@ -112,7 +112,6 @@ export const getAllFriends = async (page = 0, size = 10) => {
     throw new Error("Failed to fetch friends list");
   }
 
-  // 전체 데이터를 반환
   return (await response.json()).data;
 };
 
