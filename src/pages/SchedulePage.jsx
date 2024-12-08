@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Label from "../components/Label";
 import {
   createSchedule,
   deleteSchedule,
-  // fetchScheduleByTimeIndex,
   fetchAllSchedules,
   updateSchedule,
 } from "../api/schedule";
 import Button from "../components/Button";
+<<<<<<< HEAD
 
 const generateTimeSlots = () => {
   const timeSlots = [];
@@ -79,6 +79,10 @@ const days = ["월", "화", "수", "목", "금", "토", "일"];
 //     updatedAt: "2024-12-02T09:54:53.000Z",
 //   },
 // ];
+=======
+import { days, colorClasses } from "../constants/schedule";
+import { generateTimeSlots, convertIndexToTime } from "../utils/time";
+>>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
 
 const colorClasses = [
   "bg-indigo-300 hover:bg-indigo-400",
@@ -93,7 +97,7 @@ const colorClasses = [
   "bg-cyan-300 hover:bg-cyan-400",
 ];
 const SchedulePage = () => {
-  const timeSlots = generateTimeSlots();
+  const timeSlots = useMemo(() => generateTimeSlots(), []);
   const [schedules, setSchedules] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
@@ -105,12 +109,14 @@ const SchedulePage = () => {
   const [showAllTimeSlot, setShowAllTimeSlot] = useState(false);
 
   useEffect(() => {
-    // API
     const initializeSchedules = async () => {
       try {
         const data = await fetchAllSchedules();
+<<<<<<< HEAD
 
         // 스케줄 병합을 위해서 사용
+=======
+>>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
         const sortedSchedules = [...data].sort((a, b) => {
           const aMin = Math.min(...a.time_indices);
           const bMin = Math.min(...b.time_indices);
@@ -123,9 +129,6 @@ const SchedulePage = () => {
     };
 
     initializeSchedules();
-
-    // 임시 코드
-    // setSchedules(dummySchedules);
   }, []);
 
   useEffect(() => {
@@ -143,20 +146,6 @@ const SchedulePage = () => {
 
   const handleSlotClick = async (timeIdx) => {
     if (!isEditMode) return;
-
-    // API
-    // try {
-    //   const response = await fetchScheduleByTimeIndex(timeIdx);
-    //   if (response && response.data && response.data.schedule) {
-    //     setSelectedSchedule(response.data.schedule); // API로 가져온 스케줄 설정
-    //   } else {
-    //     console.error("No schedule found for time index:", timeIdx);
-    //   }
-    // } catch (error) {
-    //   console.error("Failed to fetch schedule for time index:", timeIdx, error);
-    // }
-
-    // 임시 코드
     const slotInSchedule = schedules.find((s) =>
       s.time_indices.includes(timeIdx)
     );
@@ -200,17 +189,7 @@ const SchedulePage = () => {
         is_fixed: isFixed,
         time_indices: selectedSlots,
       };
-      // API
       const newSchedule = await updateSchedule(scheduleData);
-
-      // 임시 코드
-      // const newSchedule = {
-      //   ...scheduleData,
-      //   id: Date.now(),
-      //   createdAt: new Date().toISOString(),
-      //   updatedAt: new Date().toISOString(),
-      // };
-
       setSchedules((prev) => [...prev, newSchedule]);
       setSelectedSchedule(newSchedule);
       setSelectedSlots([]);
@@ -232,18 +211,7 @@ const SchedulePage = () => {
         is_fixed: isFixed,
         time_indices: selectedSlots,
       };
-
-      // API
       const newSchedule = await createSchedule(scheduleData);
-
-      // 임시코드
-      // const newSchedule = {
-      //   ...scheduleData,
-      //   id: Date.now(),
-      //   createdAt: new Date().toISOString(),
-      //   updatedAt: new Date().toISOString(),
-      // };
-
       setSchedules((prev) => [...prev, newSchedule]);
       setSelectedSlots([]);
       setNewTitle("");
@@ -259,17 +227,9 @@ const SchedulePage = () => {
     if (!selectedSchedule) return;
 
     try {
-      // API 호출 준비가 되었을 때 사용:
       await deleteSchedule(selectedSchedule.title);
-
       const updatedSchedules = await fetchAllSchedules();
       setSchedules(updatedSchedules);
-
-      // 임시코드
-      // setSchedules((prev) =>
-      //   prev.filter((s) => s.title !== selectedSchedule.title)
-      // );
-
       setSelectedSchedule(null);
       alert("스케줄이 삭제되었습니다.");
     } catch (error) {
@@ -286,6 +246,7 @@ const SchedulePage = () => {
     return titleColorMap.get(title);
   };
 
+<<<<<<< HEAD
   const convertIndexToTime = (timeIndex) => {
     const dayIndex = Math.floor(timeIndex / 96);
     const timeSlotIndex = timeIndex % 96;
@@ -300,6 +261,9 @@ const SchedulePage = () => {
 
   // 스케줄 통합해서 보여주기
   const renderTimeSlot = (slotIndex, rowIndex, colIndex) => {
+=======
+  const renderTimeSlot = (slotIndex) => {
+>>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
     const schedule = schedules.find((s) => s.time_indices.includes(slotIndex));
     const isSelected = selectedSlots.includes(slotIndex);
 
@@ -404,7 +368,11 @@ const SchedulePage = () => {
                   </div>
                   {days.map((_, colIndex) => {
                     const slotIndex = colIndex * timeSlots.length + rowIndex;
+<<<<<<< HEAD
                     return renderTimeSlot(slotIndex, rowIndex, colIndex);
+=======
+                    return renderTimeSlot(slotIndex);
+>>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
                   })}
                 </React.Fragment>
               );
@@ -437,19 +405,23 @@ const SchedulePage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="flex justify-center mt-4 space-x-4">
-                  <button
-                    className="px-4 py-2 font-bold text-white rounded bg-gradient-purple"
-                    onClick={handleEditSchedule}
+                <div className="flex justify-center w-full mt-4 space-x-2">
+                  <Button
+                    theme="indigo"
+                    size="md"
+                    className="flex-1"
+                    onClick={() => handleEditSchedule()}
                   >
                     수정하기
-                  </button>
-                  <button
-                    className="px-4 py-2 font-bold text-white rounded bg-gradient-pink"
-                    onClick={handleDeleteSchedule}
+                  </Button>
+                  <Button
+                    theme="pink"
+                    size="md"
+                    className="flex-1"
+                    onClick={() => handleDeleteSchedule()}
                   >
                     삭제하기
-                  </button>
+                  </Button>
                 </div>
               </div>
             ) : (
@@ -508,7 +480,11 @@ const SchedulePage = () => {
                   </div>
                 </div>
                 <span className="heading-4">선택된 시간</span>
+<<<<<<< HEAD
                 <div className="flex flex-wrap gap-1 p-2 m-2 border rounded-lg body-1 border-primary-500">
+=======
+                <div className="flex flex-wrap gap-1 p-2 m-2 body-1">
+>>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
                   {selectedSlots.map((time_idx) => (
                     <Label key={time_idx} theme="solid" size="sm">
                       {convertIndexToTime(time_idx)}
@@ -516,12 +492,13 @@ const SchedulePage = () => {
                   ))}
                 </div>
                 {isUpdateMode ? (
-                  <button
-                    className="px-4 py-2 font-bold text-white rounded bg-gradient-pink"
+                  <Button
+                    theme="pink"
+                    size="md"
                     onClick={() => handleUpdateSchedule()}
                   >
                     수정 완료
-                  </button>
+                  </Button>
                 ) : (
                   <div className="flex justify-center w-full mt-4 space-x-2">
                     <Button

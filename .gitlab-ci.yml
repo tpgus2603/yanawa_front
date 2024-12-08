@@ -5,6 +5,8 @@ stages:
 build:
   stage: build
   image: node:16
+  tags: 
+    - react # Runner 태그와 일치해야 함
   before_script:
     # Base64로 인코딩된 환경변수를 디코딩하여 .env 파일 생성
     - echo "$ENV_FILE_BASE64" | base64 -d > .env
@@ -18,10 +20,13 @@ build:
 
 deploy:
   stage: deploy
+  tags:
+    - react 
   image: alpine:latest
   before_script:
-    # SSH 클라이언트 설치
-    - apk add --no-cache openssh
+    # SSH 클라이언트 설치 (Ubuntu 환경)
+    - sudo apt update
+    - sudo apt install -y openssh-client
     # .ssh 디렉토리 생성
     - mkdir -p ~/.ssh
     # Base64로 인코딩된 SSH 키 디코딩 및 파일 생성
