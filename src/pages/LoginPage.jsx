@@ -14,8 +14,21 @@ const LoginPage = () => {
 
   // Google 로그인 처리
   const handleGoogleLogin = () => {
-    const loginUrl = getLoginUrl(); // 로그인 URL 가져오기
-    window.location.href = loginUrl; // 리다이렉트
+    const fcmToken = localStorage.getItem("fcmToken"); // FCM 토큰 가져오기
+
+    // 기본 로그인 URL
+    let loginUrl = getLoginUrl();
+
+    // fcmToken이 있을 경우 state 파라미터에 추가
+    if (fcmToken) {
+      loginUrl += `?state=${encodeURIComponent(fcmToken)}`;
+      console.log("FCM Token이 포함된 loginUrl:", loginUrl);
+    } else {
+      console.warn("FCM Token이 localStorage에 없습니다");
+    }
+
+    // Google OAuth로 리다이렉트
+    window.location.href = loginUrl;
   };
 
   // 로그아웃 처리
