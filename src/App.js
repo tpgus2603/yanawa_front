@@ -23,7 +23,10 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/timetable" element={<SchedulePage />} />
             <Route path="/chattinglist" element={<ChattingListPage />} />
-            <Route path="/chat/chatRoom/:chatRoomId" element={<ChattingDetailPage />} />
+            <Route
+              path="/chat/chatRoom/:chatRoomId"
+              element={<ChattingDetailPage />}
+            />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import GoogleLogo from "../components/icons/GoogleLogoIcon";
+import GoogleLogoIcon from "../components/icons/GoogleLogoIcon";
 import Button from "../components/Button";
 import { getLoginUrl } from "../api/auth";
 import useAuthStore from "../store/authStore";
@@ -65,7 +65,7 @@ const LoginPage = () => {
         <Button
           size="md"
           theme="white"
-          icon={<GoogleLogo />}
+          icon={<GoogleLogoIcon />}
           onClick={handleGoogleLogin}
         >
           구글로 로그인
