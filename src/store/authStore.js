@@ -11,6 +11,7 @@ const useAuthStore = create((set) => ({
     try {
       const userInfo = await getSessionInfo();
       set({ user: userInfo });
+      localStorage.setItem("user", { user: userInfo });
     } catch (error) {
       console.error("Failed to fetch session info:", error);
       set({ user: null });
@@ -24,6 +25,7 @@ const useAuthStore = create((set) => ({
     try {
       await logout();
       set({ user: null });
+      localStorage.removeItem("user");
     } catch (error) {
       console.error("Failed to logout:", error);
     }

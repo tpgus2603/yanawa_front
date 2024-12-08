@@ -9,7 +9,7 @@ const labelVariants = cva(
       theme: {
         indigo: "bg-secondary-900 text-white",
         solid: "bg-primary-600 text-white",
-        lightsolid: "bg-primary-100 text-primary-600",
+        lightsolid: "bg-primary-600 text-primary-100 border border-primary-100",
         graysolid: "bg-grayscale-100 text-grayscale-900",
         ghost: "border border-grayscale-500 text-grayscale-900",
       },

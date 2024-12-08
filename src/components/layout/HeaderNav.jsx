@@ -89,7 +89,7 @@ export default function HeaderNav() {
                 icon={<ChatIcon />}
                 onClick={navigateToChattingList}
               >
-                번개채팅방
+                번개모임
               </Button>
               {user ? (
                 <Button
