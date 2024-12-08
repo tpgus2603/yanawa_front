@@ -25,8 +25,8 @@ deploy:
   image: alpine:latest
   before_script:
     # SSH 클라이언트 설치 (Ubuntu 환경)
-    - sudo apt update
-    - sudo apt install -y openssh-client
+    - apt update
+    - apt install -y openssh-client
     # .ssh 디렉토리 생성
     - mkdir -p ~/.ssh
     # Base64로 인코딩된 SSH 키 디코딩 및 파일 생성
