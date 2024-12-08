@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../store/authStore";
 
 function ChattingList() {
   const [rooms, setRooms] = useState([]);
   const [joinedRooms, setJoinedRooms] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({});
   const [nickname] = useState(localStorage.getItem("nickname") || "");
+  const { user, fetchSession } = useAuthStore(); // Zustand 상태 및 메서드 가져오기
   const navigate = useNavigate();
   const ws = useRef(null);
 
@@ -58,7 +60,13 @@ function ChattingList() {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/chat/rooms");
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/rooms`, {
+        method: "GET",
+        credentials: "include", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) throw new Error("Failed to fetch rooms");
       const data = await response.json();
       setRooms(data);
@@ -85,7 +93,14 @@ function ChattingList() {
   // };
   const fetchUnreadMessages = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chat/unread-messages/${nickname}`);
+
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/unread-messages/${nickname}`, {
+        method: "GET",
+        credentials: "include", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (!response.ok) throw new Error("Failed to fetch unread messages");
       const data = await response.json();
       const joinedChatRoomIds = data.map((chatRoom) => chatRoom.chatRoomId);
@@ -126,6 +141,27 @@ function ChattingList() {
       if (ws.current) ws.current.close();
     };
   }, [nickname, fetchUnreadMessages]);
+
+  useEffect(() => {
+    const fetchUserSession = async () => {
+      try {
+        await fetchSession(); // 세션 정보 가져오기
+      } catch (error) {
+        console.error("Failed to fetch session:", error);
+      }
+    };
+
+    fetchUserSession();
+  }, [fetchSession]); // 페이지 마운트 시 실행
+
+  if (!user) {
+    return (
+      <div className="max-w-6xl mx-auto p-6 font-sans">
+        <h1 className="text-3xl font-bold mb-6">번개 채팅방 목록</h1>
+        <p className="text-center text-gray-500">로그인이 필요합니다. 로그인 페이지로 이동해주세요.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 font-sans">

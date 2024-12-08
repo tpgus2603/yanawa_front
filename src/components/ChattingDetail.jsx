@@ -282,7 +282,13 @@ function ChattingDetail() {
 
   const fetchUnreadCounts = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chat/unread-count/${chatRoomId}`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/unread-count/${chatRoomId}`, {
+        method: "GET",
+        credentials: "include", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         setChatUnread(data);
@@ -308,7 +314,7 @@ function ChattingDetail() {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/chat/update-status-and-logid', {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/update-status-and-logid`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -349,7 +355,7 @@ function ChattingDetail() {
 
 
         const response = await fetch(
-          `http://localhost:8080/api/chat/${chatRoomId}/notices`,
+          `${process.env.REACT_APP_BASE_URL}/api/chat/${chatRoomId}/notices`,
           {
             method: 'POST',
             headers: {
@@ -393,7 +399,7 @@ function ChattingDetail() {
 
   const fetchLatestNotice = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chat/${chatRoomId}/notices/latest`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/${chatRoomId}/notices/latest`);
       if (response.ok) {
         const latestNotice = await response.json();
 
@@ -523,7 +529,7 @@ function ChattingDetail() {
 
   const updateLastReadAt = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/chat/update-read-status', {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}api/chat/update-read-status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
