@@ -7,82 +7,8 @@ import {
   updateSchedule,
 } from "../api/schedule";
 import Button from "../components/Button";
-<<<<<<< HEAD
-
-const generateTimeSlots = () => {
-  const timeSlots = [];
-  for (let hour = 0; hour < 24; hour++) {
-    for (let min = 0; min < 60; min += 15) {
-      timeSlots.push(
-        `${hour.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}`
-      );
-    }
-  }
-  return timeSlots;
-};
-
-const days = ["월", "화", "수", "목", "금", "토", "일"];
-
-// const dummySchedules = [
-//   {
-//     id: 1,
-//     user_id: 1,
-//     title: "알고리즘 스터디",
-//     is_fixed: true,
-//     time_indices: [36, 37, 38, 39],
-//     createdAt: "2024-12-02T09:52:00.000Z",
-//     updatedAt: "2024-12-02T09:52:00.000Z",
-//   },
-//   {
-//     id: 5,
-//     user_id: 1,
-//     title: "웹시설 팀플",
-//     is_fixed: true,
-//     time_indices: [165, 166, 167, 255, 256, 257],
-//     createdAt: "2024-12-02T09:54:53.000Z",
-//     updatedAt: "2024-12-02T09:54:53.000Z",
-//   },
-//   {
-//     id: 11,
-//     user_id: 1,
-//     title: "점심약속",
-//     is_fixed: false,
-//     time_indices: [240, 241, 242],
-//     createdAt: "2024-12-02T09:54:53.000Z",
-//     updatedAt: "2024-12-02T09:54:53.000Z",
-//   },
-//   {
-//     id: 14,
-//     user_id: 1,
-//     title: "롤 5:5",
-//     is_fixed: true,
-//     time_indices: [302, 303, 304, 305, 306, 307],
-//     createdAt: "2024-12-02T09:54:53.000Z",
-//     updatedAt: "2024-12-02T09:54:53.000Z",
-//   },
-//   {
-//     id: 20,
-//     user_id: 1,
-//     title: "토트넘 vs 첼시 경기",
-//     is_fixed: true,
-//     time_indices: [13, 14, 15, 16, 17, 18],
-//     createdAt: "2024-12-02T09:54:53.000Z",
-//     updatedAt: "2024-12-02T09:54:53.000Z",
-//   },
-//   {
-//     id: 26,
-//     user_id: 1,
-//     title: "아침 구보",
-//     is_fixed: true,
-//     time_indices: [34, 35, 130, 131, 226, 227, 322, 323, 418, 419, 514, 515, 610, 611],
-//     createdAt: "2024-12-02T09:54:53.000Z",
-//     updatedAt: "2024-12-02T09:54:53.000Z",
-//   },
-// ];
-=======
 import { days, colorClasses } from "../constants/schedule";
 import { generateTimeSlots, convertIndexToTime } from "../utils/time";
->>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
 
 const colorClasses = [
   "bg-indigo-300 hover:bg-indigo-400",
@@ -112,11 +38,6 @@ const SchedulePage = () => {
     const initializeSchedules = async () => {
       try {
         const data = await fetchAllSchedules();
-<<<<<<< HEAD
-
-        // 스케줄 병합을 위해서 사용
-=======
->>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
         const sortedSchedules = [...data].sort((a, b) => {
           const aMin = Math.min(...a.time_indices);
           const bMin = Math.min(...b.time_indices);
@@ -246,24 +167,7 @@ const SchedulePage = () => {
     return titleColorMap.get(title);
   };
 
-<<<<<<< HEAD
-  const convertIndexToTime = (timeIndex) => {
-    const dayIndex = Math.floor(timeIndex / 96);
-    const timeSlotIndex = timeIndex % 96;
-    const hour = Math.floor(timeSlotIndex / 4);
-    const minute = (timeSlotIndex % 4) * 15;
-    const day = days[dayIndex];
-    const time = `${hour.toString().padStart(2, "0")}:${minute
-      .toString()
-      .padStart(2, "0")}`;
-    return `${day} ${time}`;
-  };
-
-  // 스케줄 통합해서 보여주기
-  const renderTimeSlot = (slotIndex, rowIndex, colIndex) => {
-=======
   const renderTimeSlot = (slotIndex) => {
->>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
     const schedule = schedules.find((s) => s.time_indices.includes(slotIndex));
     const isSelected = selectedSlots.includes(slotIndex);
 
@@ -368,11 +272,7 @@ const SchedulePage = () => {
                   </div>
                   {days.map((_, colIndex) => {
                     const slotIndex = colIndex * timeSlots.length + rowIndex;
-<<<<<<< HEAD
-                    return renderTimeSlot(slotIndex, rowIndex, colIndex);
-=======
                     return renderTimeSlot(slotIndex);
->>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
                   })}
                 </React.Fragment>
               );
@@ -480,11 +380,7 @@ const SchedulePage = () => {
                   </div>
                 </div>
                 <span className="heading-4">선택된 시간</span>
-<<<<<<< HEAD
-                <div className="flex flex-wrap gap-1 p-2 m-2 border rounded-lg body-1 border-primary-500">
-=======
                 <div className="flex flex-wrap gap-1 p-2 m-2 body-1">
->>>>>>> 8b5fcc04704becd2a408b961adf1c2ef9da3b043
                   {selectedSlots.map((time_idx) => (
                     <Label key={time_idx} theme="solid" size="sm">
                       {convertIndexToTime(time_idx)}
