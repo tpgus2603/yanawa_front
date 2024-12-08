@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import LogoIcon from "../icons/LogoIcon";
 import useAuthStore from "../../store/authStore";
 import Button from "../Button";
+import { useNavigate } from "react-router-dom";
 
 const HeaderLogoBar = () => {
   const { user, logoutUser } = useAuthStore(); // Zustand에서 상태 및 메서드 가져오기
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
+  const navigate = useNavigate();
 
   // 로그아웃 처리
   const handleLogout = async () => {
     try {
       setLoading(true); // 로딩 상태 활성화
       await logoutUser(); // 로그아웃 실행
+      navigate("/");
     } catch (error) {
       console.error("Failed to logout:", error);
     } finally {
