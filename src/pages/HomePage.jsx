@@ -238,14 +238,13 @@ const HomePage = () => {
           </Button>
         </section>
       </div>
-
       {showInstallPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="w-11/12 max-w-lg p-6 text-center bg-white rounded-xl">
+          <div className="flex flex-col items-center justify-center w-11/12 max-w-lg p-6 text-center bg-white rounded-xl">
             <img
-              className="w-1/2 mx-auto"
+              className="w-1/4 mx-auto"
               src={`${process.env.PUBLIC_URL}/windows11/Square44x44Logo.altform-lightunplated_targetsize-96.png`}
-              alt="Modal"
+              alt="YANAWA"
             />
             <h2 className="mt-4 text-lg font-bold">
               YHANAWA를 설치하고 <br /> 번개모임을 만들어보세요!
@@ -253,22 +252,17 @@ const HomePage = () => {
             <p className="my-4 text-sm text-gray-600">
               앱에서 푸시 알림을 받을 수 있어요.
             </p>
-            <button
-              className="px-6 py-2 font-bold text-white bg-blue-700 rounded-full"
-              onClick={handleInstallClick}
-            >
-              설치
-            </button>
-            <button
-              className="mt-4 text-sm text-gray-500"
-              onClick={handleCloseModal}
-            >
-              나중에 설치
-            </button>
+            <div className="flex gap-2">
+              <Button size="md" onClick={handleInstallClick}>
+                설치
+              </Button>
+              <Button size="md" theme="white" onClick={handleCloseModal}>
+                나중에 설치
+              </Button>
+            </div>
           </div>
         </div>
       )}
-
       {showPushNotificationPrompt && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-white">
           <img
@@ -280,18 +274,18 @@ const HomePage = () => {
           <p className="my-2 text-center text-gray-600">
             푸시 알림을 설정하고 각종 공지사항, 키워드 알림을 받아보세요!
           </p>
-          <button
-            className="px-6 py-2 font-bold text-white bg-blue-700 rounded-full"
-            onClick={handleAllowNotifications}
-          >
-            알림 받기
-          </button>
-          <button
-            className="mt-4 text-sm text-gray-500"
-            onClick={() => setShowPushNotificationPrompt(false)}
-          >
-            나중에 받을게요
-          </button>
+          <div className="flex gap-2 mt-4">
+            <Button size="md" onClick={handleAllowNotifications}>
+              알림 받기
+            </Button>
+            <Button
+              size="md"
+              theme="white"
+              onClick={() => setShowPushNotificationPrompt(false)}
+            >
+              나중에 받을게요
+            </Button>
+          </div>
         </div>
       )}
       {showModal && <DailyModal onClose={handleCloseModal} />}
