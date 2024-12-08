@@ -244,7 +244,7 @@ const HomePage = () => {
           <div className="w-11/12 max-w-lg p-6 text-center bg-white rounded-xl">
             <img
               className="w-1/2 mx-auto"
-              src={`${process.env.PUBLIC_URL}/logo196.png`}
+              src={`${process.env.PUBLIC_URL}/windows11/Square44x44Logo.altform-lightunplated_targetsize-96.png`}
               alt="Modal"
             />
             <h2 className="mt-4 text-lg font-bold">
@@ -274,7 +274,7 @@ const HomePage = () => {
           <img
             className="w-24 h-24 mb-4"
             alt="알람"
-            src={`${process.env.PUBLIC_URL}/icons/notiOn.svg`}
+            src={`${process.env.PUBLIC_URL}/android/android-launchericon-96-96.png`}
           />
           <h1 className="text-xl font-bold">푸시 알림 받기</h1>
           <p className="my-2 text-center text-gray-600">
@@ -304,7 +304,7 @@ const HomePage = () => {
           copyDescription="야나와는 앱설치 없이 홈화면에 추가를 통해 사용할 수 있습니다."
           copyShareStep="하단 메뉴에서 '공유' 아이콘을 눌러주세요."
           copyAddToHomeScreenStep="아래의 '홈 화면에 추가' 버튼을 눌러주세요."
-          appIconPath="%PUBLIC_URL%/ios/192.png"
+          appIconPath={`${process.env.PUBLIC_URL}/ios/192.png`}
           isShown={shouldShowPWAPrompt}
         />
       )}
