@@ -80,7 +80,7 @@ const HomePage = () => {
 
   const handleStartNow = () => {
     if (user) {
-      navigate("/chat-room"); // 번개 채팅방으로 리다이렉션
+      navigate("/chattinglist"); // 번개 채팅방으로 리다이렉션
     } else {
       navigate("/login"); // 로그인 페이지로 리다이렉션
     }
