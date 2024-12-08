@@ -12,7 +12,7 @@ const useAuthStore = create((set) => ({
       const userInfo = await getSessionInfo();
       set({ user: userInfo });
       localStorage.setItem("user", userInfo);
-      const nickname = userInfo.user.name || "Unknown";
+      const nickname = userInfo.name || "Unknown";
       localStorage.setItem("nickname", nickname);
       console.log("반환값 userInfo: " + userInfo);
       const localuser = localStorage.getItem("user");
