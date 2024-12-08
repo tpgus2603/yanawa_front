@@ -280,14 +280,14 @@ const MyPage = () => {
                     <Button
                       size="sm"
                       theme="indigo"
-                      onClick={() => handleAcceptRequest(request.id)}
+                      onClick={() => handleAcceptRequest(request.requester.id)}
                     >
                       수락
                     </Button>
                     <Button
                       size="sm"
                       theme="pink"
-                      onClick={() => handleRejectRequest(request.id)}
+                      onClick={() => handleRejectRequest(request.requester.id)}
                     >
                       거절
                     </Button>
