@@ -1050,7 +1050,7 @@ function ChattingDetail() {
           theme="pink"
           state={input.trim() ? "default" : "disable"}
           onClick={sendMessage}
-          className="ml-3"
+          className="ml-3 flex items-center justify-center whitespace-nowrap w-16" // w-32로 버튼 너비 설정
         >
           전송
         </Button>
