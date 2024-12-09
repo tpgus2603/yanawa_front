@@ -4,19 +4,22 @@ import React from "react";
 import Button from "./Button";
 import Label from "./Label";
 import { convertIndexToTime } from "../utils/time";
-const cardVariants = cva("w-full rounded-xl shadow-lg p-4 overflow-hidden", {
-  variants: {
-    theme: {
-      black: "bg-black text-white",
-      white: "bg-white text-black",
-      pink: "bg-gradient-pink text-white",
-      purple: "bg-gradient-purple text-white",
-      indigo: "bg-gradient-indigo text-white",
-      mix: "bg-gradient-mix text-white",
-      gray: "bg-gray-300 text-gray-500",
+const cardVariants = cva(
+  "w-full rounded-xl shadow-lg p-4 overflow-hidden cursor-pointer",
+  {
+    variants: {
+      theme: {
+        black: "bg-black text-white",
+        white: "bg-white text-black",
+        pink: "bg-gradient-pink text-white",
+        purple: "bg-gradient-purple text-white",
+        indigo: "bg-gradient-indigo text-white",
+        mix: "bg-gradient-mix text-white",
+        gray: "bg-gray-300 text-gray-500",
+      },
     },
-  },
-});
+  }
+);
 
 export default function Card({
   meeting,
@@ -52,7 +55,7 @@ export default function Card({
   const deadlineTime = convertIndexToTime(time_idx_deadline);
 
   return (
-    <div className={cn(variantClass)} onClick={onClick}>
+    <div className={cn(variantClass)} onClick={onClick} role="button">
       <h3 className="mb-2 text-xl font-bold">{title}</h3>
       <Label size="sm" theme="black">
         장소: {location}
