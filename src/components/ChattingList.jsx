@@ -16,7 +16,14 @@ function ChattingList() {
 
   // WebSocket 연결 및 실시간 업데이트
   const setupWebSocket = () => {
-    ws.current = new WebSocket(WS_URL); // WebSocket 연결
+    console.log("연결하는 url", WS_URL);
+    // ws.current = new WebSocket(WS_URL); // WebSocket 연결
+    ws.current = new WebSocket(WS_URL, [], {
+      headers: {
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Origin": `${process.env.REACT_APP_BASE_URL}`,
+      },
+    });
 
     ws.current.onopen = () => {
       console.log('WebSocket 연결 성공');
@@ -58,6 +65,10 @@ function ChattingList() {
 
     ws.current.onerror = (error) => {
       console.error('WebSocket 오류:', error);
+
+      if (error.target) {
+        console.error("WebSocket 오류 대상:", error.target);
+      }
     };
   };
 
