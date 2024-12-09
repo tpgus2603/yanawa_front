@@ -5,7 +5,7 @@ import { createMeeting } from "../api/meeting";
 import { convertTimeToIndex } from "../utils/time";
 import { days } from "../constants/schedule";
 
-const CreateMeetingModal = ({ isOpen, onClose }) => {
+const CreateMeetingModal = ({ isOpen, onClose, onMeetingCreated }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -51,13 +51,14 @@ const CreateMeetingModal = ({ isOpen, onClose }) => {
         time_idx_start,
         time_idx_end,
         time_idx_deadline,
-        type: "OPEN", // 기본값
+        type: "OPEN",
         max_num: parseInt(maxNum),
       };
 
       await createMeeting(meetingData);
       alert("모임이 성공적으로 생성되었습니다!");
-      onClose();
+      onMeetingCreated(); // 모임 생성 후 상태 동기화
+      onClose(); // 모달 닫기
     } catch (error) {
       console.error("Failed to create meeting:", error);
       alert("모임 생성에 실패했습니다.");

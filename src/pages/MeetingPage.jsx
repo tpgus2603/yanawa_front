@@ -239,7 +239,7 @@ const MeetingPage = () => {
                 현재 조회되는 번개 모임이 없습니다.
               </p>
             )}
-            <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2 desktop:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2">
               {meetings.map((meeting) => (
                 <Card
                   key={meeting.id}
@@ -271,7 +271,7 @@ const MeetingPage = () => {
                 현재 조회되는 나의 번개 모임이 없습니다.
               </p>
             )}
-            <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2 desktop:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2">
               {myMeetings.map((meeting) => (
                 <Card
                   key={meeting.id}
@@ -298,7 +298,14 @@ const MeetingPage = () => {
       <CreateMeetingModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
+        onMeetingCreated={async () => {
+          const updatedData = await getAllMeetings(0, meetingPage * 20);
+          setMeetings(updatedData.content);
+          const updatedMyData = await getMyMeetings(0, myMeetingPage * 20);
+          setMyMeetings(updatedMyData.content);
+        }}
       />
+
       <MeetingDetailModal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
