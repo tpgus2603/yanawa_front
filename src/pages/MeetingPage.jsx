@@ -106,7 +106,7 @@ const MeetingPage = () => {
   };
 
   const handleJoinButtonClick = async (e, meetingId) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     try {
       await joinMeeting(meetingId);
       alert("번개 모임에 성공적으로 참가했습니다!");
@@ -137,7 +137,7 @@ const MeetingPage = () => {
   };
 
   const handleDeleteButtonClick = async (e, meetingId) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     try {
       await deleteMeeting(meetingId);
       alert("번개 모임을 삭제했습니다!");
@@ -157,7 +157,7 @@ const MeetingPage = () => {
   };
 
   const handleLeaveButtonClick = async (e, meetingId) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     try {
       await leaveMeeting(meetingId);
       alert("번개 모임을 나갔습니다!");
@@ -177,7 +177,7 @@ const MeetingPage = () => {
   };
 
   const handleCloseButtonClick = async (e, meetingId) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     try {
       await closeMeeting(meetingId);
       alert("번개 모임을 마감했습니다!");
