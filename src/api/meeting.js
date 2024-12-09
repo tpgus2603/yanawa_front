@@ -11,6 +11,7 @@ export const getAllMeetings = async (page = 0, size = 20) => {
   const response = await fetch(
     `${BASE_URL}/api/meeting?page=${page}&size=${size}`,
     {
+      credentials: "include", // Include credentials for session-based authentication
       method: "GET",
     }
   );
@@ -29,6 +30,7 @@ export const getAllMeetings = async (page = 0, size = 20) => {
  */
 export const getMeetingDetails = async (meetingId) => {
   const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}`, {
+    credentials: "include",
     method: "GET",
   });
 
@@ -46,6 +48,7 @@ export const getMeetingDetails = async (meetingId) => {
  */
 export const createMeeting = async (meetingData) => {
   const response = await fetch(`${BASE_URL}/api/meeting`, {
+    credentials: "include",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -67,6 +70,7 @@ export const createMeeting = async (meetingData) => {
  */
 export const joinMeeting = async (meetingId) => {
   const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}/join`, {
+    credentials: "include",
     method: "POST",
   });
 
@@ -87,6 +91,7 @@ export const getMyMeetings = async (page = 0, size = 20) => {
   const response = await fetch(
     `${BASE_URL}/api/meeting/my?page=${page}&size=${size}`,
     {
+      credentials: "include",
       method: "GET",
     }
   );
@@ -105,7 +110,8 @@ export const getMyMeetings = async (page = 0, size = 20) => {
  */
 export const leaveMeeting = async (meetingId) => {
   const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}/leave`, {
-    method: "POST",
+    credentials: "include",
+    method: "DELETE",
   });
 
   if (!response.ok) {
@@ -122,6 +128,7 @@ export const leaveMeeting = async (meetingId) => {
  */
 export const closeMeeting = async (meetingId) => {
   const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}/close`, {
+    credentials: "include",
     method: "PUT",
   });
 
@@ -132,8 +139,14 @@ export const closeMeeting = async (meetingId) => {
   return await response.json();
 };
 
+/**
+ * 미팅 삭제
+ * @param {number} meetingId - 삭제할 미팅 ID
+ * @returns {Promise<Object>} - 삭제 결과 메시지
+ */
 export const deleteMeeting = async (meetingId) => {
   const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}`, {
+    credentials: "include",
     method: "DELETE",
   });
 
