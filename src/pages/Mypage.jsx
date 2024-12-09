@@ -90,7 +90,7 @@ const MyPage = () => {
       }
     };
     if (activeTab === "friends") fetchSentRequests();
-  }, [activeTab]);
+  }, [activeTab, sentRequests]);
 
   // 받은 친구 요청 조회
   useEffect(() => {
@@ -104,7 +104,7 @@ const MyPage = () => {
       }
     };
     if (activeTab === "friends") fetchReceivedRequests();
-  }, [activeTab]);
+  }, [activeTab, receivedRequests]);
 
   // 친구 목록 무한스크롤 처리
   useEffect(() => {
@@ -133,7 +133,7 @@ const MyPage = () => {
 
     if (activeTab === "friends") fetchFriends();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, hasNext, activeTab, isLoading]);
+  }, [page, hasNext, activeTab, isLoading, friends]);
 
   // 친구 요청 보내기
   const handleSendRequest = async () => {
