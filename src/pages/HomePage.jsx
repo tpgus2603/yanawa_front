@@ -23,15 +23,6 @@ const HomePage = () => {
 
   const features = [
     {
-      title: "Google OAuth 간편 로그인",
-      description: "Google 계정을 통해 빠르고 간편하게 로그인하세요.",
-      component: (
-        <Button size="md" theme="white" icon={<GoogleLogoIcon />}>
-          구글로 로그인
-        </Button>
-      ),
-    },
-    {
       title: "고정 및 유동적인 시간표 관리",
       description:
         "고정 시간표와 유동 시간표를 쉽게 관리하고, 일정을 효율적으로 조율하세요.",
@@ -77,13 +68,24 @@ const HomePage = () => {
         </div>
       ),
     },
+    {
+      title: "Google OAuth 간편 로그인",
+      description: "Google 계정을 통해 빠르고 간편하게 로그인하세요.",
+      component: (
+        <div className="flex flex-col items-center justify-center h-40 p-4 bg-white border rounded-lg shadow-lg border-grayscale-300 w-60">
+          <Button size="md" theme="white" icon={<GoogleLogoIcon />}>
+            구글로 로그인
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   const navigate = useNavigate();
 
   const handleStartNow = () => {
     if (user) {
-      navigate("/chattinglist"); // 번개 채팅방으로 리다이렉션
+      navigate("/meeting"); // 번개 채팅방으로 리다이렉션
     } else {
       navigate("/login"); // 로그인 페이지로 리다이렉션
     }
