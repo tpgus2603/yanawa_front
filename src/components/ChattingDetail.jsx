@@ -972,7 +972,7 @@ function ChattingDetail() {
                   <strong
                     style={{
                       display: "block",
-                      marginBottom: "2px",
+                      marginBottom: "-12px",
                       fontSize: "0.9em",
                       color: "#555",
                     }}
@@ -992,16 +992,38 @@ function ChattingDetail() {
                   style={{
                     marginTop: sameSenderAsPrev ? "-16px" : "8px",
                     justifyContent: isMine ? "flex-end" : "flex-start",
+                    alignItems: "center", // 중앙 정렬
                   }}
                 >
+                  {/* 내가 보낸 메시지: 읽지 않은 사람 수는 왼쪽에 표시 */}
+                  {isMine && unreadCountValue > 0 && (
+                    <div
+                      style={{
+                        fontSize: "0.8em",
+                        color: "gray",
+                        marginRight: "8px", // 메시지 버블과 간격
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#f0f0f0",
+                        borderRadius: "50%",
+                        width: "20px",
+                        height: "20px",
+                        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      {unreadCountValue}
+                    </div>
+                  )}
+
                   <MessageBubble
                     isMine={isMine}
-                    highlighted={
-                      searchResults[currentSearchIndex] === messageData
-                    }
+                    highlighted={searchResults[currentSearchIndex] === messageData}
                     onContextMenu={(e) => handleRightClick(e, messageData)}
                     style={{
-                      textAlign: isMine ? "right" : "left",
+                      textAlign: "left",
+                      maxWidth: "75%", // 화면의 75%를 넘지 않도록 제한
                     }}
                   >
                     <div
@@ -1012,24 +1034,37 @@ function ChattingDetail() {
                       }}
                     >
                       {highlightSearchTerm(messageData.message)}
-                      <span
-                        style={{
-                          marginLeft: isMine ? "0" : "16px",
-                          marginRight: isMine ? "16px" : "0",
-                          fontSize: "0.8em",
-                          color: "gray",
-                        }}
-                      >
-                        {unreadCountValue > 0 && `${unreadCountValue}`}
-                      </span>
                     </div>
-                    {/* 분 단위가 다르면 시간 표시 */}
+
+                    {/* 메시지의 하단 시간 표시 */}
                     {(isNewMinute || isLastMessageInGroup) && (
                       <MessageTimestamp isMine={isMine}>
                         {messageTime}
                       </MessageTimestamp>
                     )}
                   </MessageBubble>
+
+                  {/* 상대방이 보낸 메시지: 읽지 않은 사람 수는 오른쪽에 표시 */}
+                  {!isMine && unreadCountValue > 0 && (
+                    <div
+                      style={{
+                        fontSize: "0.8em",
+                        color: "gray",
+                        marginLeft: "8px", // 메시지 버블과 간격
+                        textAlign: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#f0f0f0",
+                        borderRadius: "50%",
+                        width: "20px",
+                        height: "20px",
+                        boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      {unreadCountValue}
+                    </div>
+                  )}
                 </MessageContainer>
               </div>
             );
