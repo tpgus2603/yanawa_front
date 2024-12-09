@@ -945,12 +945,12 @@ function ChattingDetail() {
               }
             );
 
-            const prevMessageTime =
-              prevMessage &&
-              new Date(prevMessage.timestamp).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
+            // const prevMessageTime =
+            //   prevMessage &&
+            //   new Date(prevMessage.timestamp).toLocaleTimeString([], {
+            //     hour: "2-digit",
+            //     minute: "2-digit",
+            //   });
 
             // const isNewMinute = !prevMessage || messageTime !== prevMessageTime;
             const isLastMessageInGroup = !sameSenderAsNext;
