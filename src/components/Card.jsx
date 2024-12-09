@@ -45,8 +45,7 @@ export default function Card({
   });
 
   // 시간 변환
-  // const userName = localStorage.getItem("nickname");
-  const userName = "윤석찬";
+  const userName = localStorage.getItem("nickname");
 
   const startTime = convertIndexToTime(timeIdxStart);
   const endTime = convertIndexToTime(timeIdxEnd);
