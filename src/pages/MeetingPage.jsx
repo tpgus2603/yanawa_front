@@ -3,12 +3,12 @@ import useAuthStore from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import { fetchMyMeetings, joinMeeting, createMeeting } from "../api/meeting";
+import { fetchMyMeetings, joinMeeting } from "../api/meeting";
 import CreateMeetingModal from "../components/CreateMeetingModal";
 
 const MeetingPage = () => {
   const navigate = useNavigate();
-  const { user, fetchSession } = useAuthStore(); // Zustand 상태 및 메서드 가져오기
+  const { fetchSession } = useAuthStore(); // Zustand 상태 및 메서드 가져오기
   const [meetings, setMeetings] = useState([]);
   const [meetingPage, setMeetingPage] = useState(0);
   const [meetingHasNext, setMeetingHasNext] = useState(true);
@@ -35,6 +35,7 @@ const MeetingPage = () => {
     };
 
     fetchMeetings();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meetingPage, meetingHasNext, meetingIsLoading]);
 
   useEffect(() => {

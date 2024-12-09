@@ -12,7 +12,7 @@ import {
 import Button from "../components/Button";
 import LogoIcon from "../components/icons/LogoIcon";
 import { fetchMyMeetings } from "../api/meeting";
-import Card from "../components/Card";
+// import Card from "../components/Card";
 import ChattingList from "../components/ChattingList";
 import { useNavigate } from "react-router-dom";
 
@@ -75,6 +75,7 @@ const MyPage = () => {
     };
 
     if (activeTab === "chatting") fetchMeetings();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, meetingPage, meetingHasNext, meetingIsLoading]);
 
   // 보낸 친구 요청 조회
@@ -131,6 +132,7 @@ const MyPage = () => {
     };
 
     if (activeTab === "friends") fetchFriends();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, hasNext, activeTab, isLoading]);
 
   // 친구 요청 보내기
