@@ -1019,12 +1019,11 @@ function ChattingDetail() {
 
                   <MessageBubble
                     isMine={isMine}
-                    highlighted={
-                      searchResults[currentSearchIndex] === messageData
-                    }
+                    highlighted={searchResults[currentSearchIndex] === messageData}
                     onContextMenu={(e) => handleRightClick(e, messageData)}
                     style={{
-                      textAlign: isMine ? "right" : "left",
+                      textAlign: "left",
+                      maxWidth: "75%", // 화면의 75%를 넘지 않도록 제한
                     }}
                   >
                     <div
