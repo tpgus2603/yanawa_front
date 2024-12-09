@@ -120,13 +120,23 @@ const MyPage = () => {
   // 친구 요청 수락
   const handleAcceptRequest = async (requesterId) => {
     try {
-      const response = await acceptFriendRequest(requesterId);
+      await acceptFriendRequest(requesterId);
       setReceivedRequests((prev) =>
         prev.filter((request) => request.requester.id !== requesterId)
       );
-      setFriends((prev) => [response, ...prev]); // 친구 목록에 추가
+      setIsLoading(true);
+      const response = await getAllFriends(page, 10);
+
+      const content = Array.isArray(response?.content) ? response.content : [];
+      const nextPage = response?.hasNext ?? false;
+
+      setFriends((prev) => [...prev, ...content]);
+      setHasNext(nextPage);
+      setPage((prev) => prev + 1);
     } catch (error) {
       console.error("Failed to accept request:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
