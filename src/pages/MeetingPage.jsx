@@ -101,7 +101,7 @@ const MeetingPage = () => {
     hasError,
   ]);
 
-  const handleCreateMeeting = () => {
+  const handleCreateMeeting = async () => {
     setShowCreateModal(true); // 모달 열기
   };
 
@@ -110,14 +110,15 @@ const MeetingPage = () => {
     try {
       await joinMeeting(meetingId);
       alert("번개 모임에 성공적으로 참가했습니다!");
-      // 참가 상태 업데이트
-      setMeetings((prev) =>
-        prev.map((meeting) =>
-          meeting.id === meetingId
-            ? { ...meeting, isParticipant: true }
-            : meeting
-        )
-      );
+
+      // 최신 데이터 다시 가져오기
+      if (activeTab === "all") {
+        const updatedData = await getAllMeetings(0, meetingPage * 20);
+        setMeetings(updatedData.content);
+      } else if (activeTab === "my") {
+        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
+        setMyMeetings(updatedData.content);
+      }
     } catch (error) {
       alert("번개 모임 참가에 실패했습니다.");
       console.error("Error joining meeting:", error);
@@ -140,10 +141,15 @@ const MeetingPage = () => {
     try {
       await deleteMeeting(meetingId);
       alert("번개 모임을 삭제했습니다!");
-      setMeetings((prev) => prev.filter((meeting) => meeting.id !== meetingId));
-      setMyMeetings((prev) =>
-        prev.filter((meeting) => meeting.id !== meetingId)
-      );
+
+      // 최신 데이터 다시 가져오기
+      if (activeTab === "all") {
+        const updatedData = await getAllMeetings(0, meetingPage * 20);
+        setMeetings(updatedData.content);
+      } else if (activeTab === "my") {
+        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
+        setMyMeetings(updatedData.content);
+      }
     } catch (error) {
       alert("번개 모임 삭제에 실패했습니다.");
       console.error("Error deleting meeting:", error);
@@ -155,20 +161,15 @@ const MeetingPage = () => {
     try {
       await leaveMeeting(meetingId);
       alert("번개 모임을 나갔습니다!");
-      setMeetings((prev) =>
-        prev.map((meeting) =>
-          meeting.id === meetingId
-            ? { ...meeting, isParticipant: false }
-            : meeting
-        )
-      );
-      setMyMeetings((prev) =>
-        prev.map((meeting) =>
-          meeting.id === meetingId
-            ? { ...meeting, isParticipant: false }
-            : meeting
-        )
-      );
+
+      // 최신 데이터 다시 가져오기
+      if (activeTab === "all") {
+        const updatedData = await getAllMeetings(0, meetingPage * 20);
+        setMeetings(updatedData.content);
+      } else if (activeTab === "my") {
+        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
+        setMyMeetings(updatedData.content);
+      }
     } catch (error) {
       alert("번개 모임 나가기에 실패했습니다.");
       console.error("Error leaving meeting:", error);
@@ -180,16 +181,15 @@ const MeetingPage = () => {
     try {
       await closeMeeting(meetingId);
       alert("번개 모임을 마감했습니다!");
-      setMeetings((prev) =>
-        prev.map((meeting) =>
-          meeting.id === meetingId ? { ...meeting, type: "CLOSE" } : meeting
-        )
-      );
-      setMyMeetings((prev) =>
-        prev.map((meeting) =>
-          meeting.id === meetingId ? { ...meeting, type: "CLOSE" } : meeting
-        )
-      );
+
+      // 최신 데이터 다시 가져오기
+      if (activeTab === "all") {
+        const updatedData = await getAllMeetings(0, meetingPage * 20);
+        setMeetings(updatedData.content);
+      } else if (activeTab === "my") {
+        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
+        setMyMeetings(updatedData.content);
+      }
     } catch (error) {
       alert("번개 모임 마감에 실패했습니다.");
       console.error("Error closing meeting:", error);
