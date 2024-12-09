@@ -13,11 +13,12 @@ import Button from "../components/Button";
 import LogoIcon from "../components/icons/LogoIcon";
 import { fetchMyMeetings } from "../api/meeting";
 import Card from "../components/Card";
+import ChattingList from "../components/ChattingList";
 import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   const { user, fetchSession } = useAuthStore(); // Zustand 상태 및 메서드 가져오기
-  const [activeTab, setActiveTab] = useState("lightning"); // 현재 활성화된 탭
+  const [activeTab, setActiveTab] = useState("chatting"); // 현재 활성화된 탭
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -73,7 +74,7 @@ const MyPage = () => {
       }
     };
 
-    if (activeTab === "lightning") fetchMeetings();
+    if (activeTab === "chatting") fetchMeetings();
   }, [activeTab, meetingPage, meetingHasNext, meetingIsLoading]);
 
   // 보낸 친구 요청 조회
@@ -196,13 +197,13 @@ const MyPage = () => {
       <div className="flex justify-center py-2 space-x-6 border-b">
         <button
           className={`px-4 py-2 text-sm font-medium ${
-            activeTab === "lightning"
+            activeTab === "chatting"
               ? "text-secondary-500 border-b-2 border-secondary-500"
               : "text-gray-600"
           }`}
-          onClick={() => switchTab("lightning")}
+          onClick={() => switchTab("chatting")}
         >
-          번개 모임
+          채팅방
         </button>
         <button
           className={`px-4 py-2 text-sm font-medium ${
@@ -216,20 +217,13 @@ const MyPage = () => {
         </button>
       </div>
       {/* 번개 모임 탭 */}
-      {activeTab === "lightning" && (
+      {activeTab === "chatting" && (
         <div className="p-4">
           {meetings.length === 0 && !isLoading && (
-            <p className="text-center">참여 중인 번개 모임이 없습니다.</p>
+            <p className="text-center">참여 중인 채팅방이 없습니다.</p>
           )}
           <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-3">
-            {meetings.map((meeting) => (
-              <Card
-                key={meeting.id}
-                meeting={meeting}
-                theme="purple"
-                onClick={() => console.log("Clicked meeting:", meeting.id)}
-              />
-            ))}
+            <ChattingList />
           </div>
           {isLoading && <p className="text-center">로딩 중...</p>}
           {!hasNext && meetings.length > 0 && (
