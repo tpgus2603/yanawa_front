@@ -80,11 +80,11 @@ export default function Card({
               참여중
             </Label>
           )}
-          {isScheduleConflict && (
+          {!isParticipant && isScheduleConflict ? (
             <Label className="text-warning" size="sm" theme="graysolid">
-              시간표 충돌
+              시간충돌
             </Label>
-          )}
+          ) : null}
         </div>
 
         {type === "OPEN" ? (
