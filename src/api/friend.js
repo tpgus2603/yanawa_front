@@ -27,7 +27,7 @@ export const sendFriendRequest = async (requestData) => {
  * @returns {Promise<Object[]>} - 받은 친구 요청 리스트
  */
 export const getReceivedFriendRequests = async () => {
-  const response = await fetch(`${BASE_URL}/api/friend/request/received`, {
+  const response = await fetch(`${BASE_URL}/api/friend/requests/received`, {
     method: "GET",
   });
 
@@ -43,7 +43,7 @@ export const getReceivedFriendRequests = async () => {
  * @returns {Promise<Object[]>} - 보낸 친구 요청 리스트
  */
 export const getSentFriendRequests = async () => {
-  const response = await fetch(`${BASE_URL}/api/friend/request/sent`, {
+  const response = await fetch(`${BASE_URL}/api/friend/requests/sent`, {
     method: "GET",
   });
 
