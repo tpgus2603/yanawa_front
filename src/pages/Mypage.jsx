@@ -227,7 +227,7 @@ const MyPage = () => {
           {meetings.length === 0 && !isLoading && (
             <p className="text-center">참여 중인 채팅방이 없습니다.</p>
           )}
-          <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-3">
+          <div className="w-full">
             <ChattingList />
           </div>
           {isLoading && <p className="text-center">로딩 중...</p>}
