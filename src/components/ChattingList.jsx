@@ -18,12 +18,7 @@ function ChattingList() {
   const setupWebSocket = () => {
     console.log("연결하는 url", WS_URL);
     // ws.current = new WebSocket(WS_URL); // WebSocket 연결
-    ws.current = new WebSocket(WS_URL, [], {
-      headers: {
-        "Access-Control-Allow-Credentials": "true",
-        "Access-Control-Allow-Origin": `${process.env.REACT_APP_BASE_URL}`,
-      },
-    });
+    ws.current = new WebSocket(WS_URL);
 
     ws.current.onopen = () => {
       console.log('WebSocket 연결 성공');
