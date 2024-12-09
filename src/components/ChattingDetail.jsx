@@ -972,7 +972,7 @@ function ChattingDetail() {
                   <strong
                     style={{
                       display: "block",
-                      marginBottom: "2px",
+                      marginBottom: "-12px",
                       fontSize: "0.9em",
                       color: "#555",
                     }}
