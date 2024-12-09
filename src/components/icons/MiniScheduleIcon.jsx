@@ -15,7 +15,7 @@ const dummyScheduleStatus = [
 
 const MiniScheduleIcon = ({ scheduleStatus = dummyScheduleStatus }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-40 p-4 bg-white rounded-lg shadow-lg w-60">
+    <div className="flex flex-col items-center justify-center h-40 p-4 bg-white border rounded-lg shadow-lg border-grayscale-300 w-60">
       {/* 헤더 */}
       <div className="mb-2 text-gray-300 label-1">
         <span className="text-secondary-500">고정</span> /{" "}

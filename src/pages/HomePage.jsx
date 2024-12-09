@@ -44,16 +44,19 @@ const HomePage = () => {
       component: (
         <div className="flex gap-2">
           <Button
+            aria-label="button-example1"
             size="icon"
             theme="purple"
             icon={<LogoIcon fillColor="#ffffff" />}
           />
           <Button
+            aria-label="button-example2"
             size="icon"
             theme="indigo"
             icon={<LogoIcon fillColor="#ffffff" />}
           />
           <Button
+            aria-label="button-example3"
             size="icon"
             theme="mix"
             icon={<LogoIcon fillColor="#ffffff" />}
