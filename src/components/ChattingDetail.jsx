@@ -824,7 +824,10 @@ function ChattingDetail() {
         <NoticeContainer isCollapsed={isNoticeCollapsed}>
           {!isNoticeCollapsed ? (
             <>
-              <NoticeMessage isCollapsed={isNoticeCollapsed} onClick={handleNoticeClick}>
+              <NoticeMessage
+                isCollapsed={isNoticeCollapsed}
+                onClick={handleNoticeClick}
+              >
                 📢 {notice?.message}
               </NoticeMessage>
               <NoticeSender>{notice?.sender}</NoticeSender>
@@ -854,7 +857,7 @@ function ChattingDetail() {
       {/* 공지사항 상세 모달 */}
       {isNoticeDetailModalOpen && (
         <ChattingNoticeDetailModal
-          initialNotice={selectedNotice} // 처음 표시할 공지사항
+          initialNotice={selectedNotice}
           notices={notices}
           onClose={closeNoticeDetailModal}
           onSelectNotice={(notice) => setSelectedNotice(notice)}
@@ -897,7 +900,9 @@ function ChattingDetail() {
               theme="purple"
               onClick={handleArrowDown}
               state={
-                currentSearchIndex < searchResults.length - 1 ? "default" : "disable"
+                currentSearchIndex < searchResults.length - 1
+                  ? "default"
+                  : "disable"
               }
               icon={<FaArrowDown />}
             />
@@ -926,33 +931,30 @@ function ChattingDetail() {
             const prevMessage = messages[index - 1];
             const nextMessage = messages[index + 1];
 
-            // 이전 메시지와 비교
             const sameSenderAsPrev =
               prevMessage && prevMessage.sender === messageData.sender;
 
-            // 다음 메시지와 비교
             const sameSenderAsNext =
               nextMessage && nextMessage.sender === messageData.sender;
 
-            // 현재 메시지의 타임스탬프
-            const messageTime = new Date(messageData.timestamp).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
-
-            // 이전 메시지의 타임스탬프
-            const prevMessageTime =
-              prevMessage &&
-              new Date(prevMessage.timestamp).toLocaleTimeString([], {
+            const messageTime = new Date(messageData.timestamp).toLocaleTimeString(
+              [],
+              {
                 hour: "2-digit",
                 minute: "2-digit",
-              });
+              }
+            );
 
-            // 새로운 분 단위 메시지인지 확인
-            const isNewMinute = !prevMessage || messageTime !== prevMessageTime;
+            // const prevMessageTime =
+            //   prevMessage &&
+            //   new Date(prevMessage.timestamp).toLocaleTimeString([], {
+            //     hour: "2-digit",
+            //     minute: "2-digit",
+            //   });
 
-            // 마지막 메시지인지 확인
-            const isLastMessageInGroup = !sameSenderAsNext || messageTime !== nextMessage.timestamp;
+            // const isNewMinute = !prevMessage || messageTime !== prevMessageTime;
+            const isLastMessageInGroup = !sameSenderAsNext;
+            const isDifferentUserFromPrev = !sameSenderAsPrev;
 
             if (messageData.type === "join" || messageData.type === "leave") {
               return (
@@ -960,12 +962,11 @@ function ChattingDetail() {
               );
             }
 
-            // 읽지 않은 사람 수
             const unreadCountValue = unreadCount(messageData._id);
 
             return (
               <div key={index}>
-                {isNewMinute && !isMine && (
+                {isDifferentUserFromPrev && !isMine && (
                   <strong
                     style={{
                       display: "block",
@@ -977,10 +978,15 @@ function ChattingDetail() {
                     {messageData.sender}
                   </strong>
                 )}
+
                 <MessageContainer
                   isMine={isMine}
                   highlighted={searchResults[currentSearchIndex] === messageData}
-                  ref={searchResults[currentSearchIndex] === messageData ? highlightedMessageRef : null}
+                  ref={
+                    searchResults[currentSearchIndex] === messageData
+                      ? highlightedMessageRef
+                      : null
+                  }
                   style={{
                     marginTop: sameSenderAsPrev ? "-16px" : "8px",
                     justifyContent: isMine ? "flex-end" : "flex-start",
@@ -988,7 +994,9 @@ function ChattingDetail() {
                 >
                   <MessageBubble
                     isMine={isMine}
-                    highlighted={searchResults[currentSearchIndex] === messageData}
+                    highlighted={
+                      searchResults[currentSearchIndex] === messageData
+                    }
                     onContextMenu={(e) => handleRightClick(e, messageData)}
                     style={{
                       textAlign: isMine ? "right" : "left",
@@ -1013,6 +1021,7 @@ function ChattingDetail() {
                         {unreadCountValue > 0 && `${unreadCountValue}`}
                       </span>
                     </div>
+
                     {isLastMessageInGroup && (
                       <MessageTimestamp isMine={isMine}>
                         {messageTime}
@@ -1047,7 +1056,7 @@ function ChattingDetail() {
         </Button>
       </ChatRoomInput>
     </ChatRoomContainer>
-  );  
+  );
 }
 
 export default ChattingDetail;
