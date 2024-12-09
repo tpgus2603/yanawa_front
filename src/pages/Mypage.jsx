@@ -90,7 +90,7 @@ const MyPage = () => {
       }
     };
     if (activeTab === "friends") fetchSentRequests();
-  }, [activeTab, sentRequests]);
+  }, [activeTab]);
 
   // 받은 친구 요청 조회
   useEffect(() => {
@@ -104,7 +104,7 @@ const MyPage = () => {
       }
     };
     if (activeTab === "friends") fetchReceivedRequests();
-  }, [activeTab, receivedRequests]);
+  }, [activeTab]);
 
   // 친구 목록 무한스크롤 처리
   useEffect(() => {
@@ -179,6 +179,7 @@ const MyPage = () => {
       setFriends((prev) =>
         prev.filter((friend) => friend.friendInfo.id !== friendId)
       );
+      alert("성공적으로 삭제되었습니다.");
     } catch (error) {
       console.error("Failed to delete friend:", error);
     }

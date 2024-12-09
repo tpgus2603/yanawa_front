@@ -7,6 +7,9 @@ import Button from "../components/Button";
 import ChattingNoticeDetailModal from '../components/ChattingNoticeDetailModal';
 import ChattingNoticeListModal from '../components/ChattingNoticeListModal';
 
+// 웹소켓 서버 연결 URL
+const WS_URL = process.env.REACT_APP_WS_URL;
+
 // 흔들리는 애니메이션을 위한 keyframes 정의
 const shakeAnimation = keyframes`
   0% { transform: translateY(0); }
@@ -435,7 +438,7 @@ function ChattingDetail() {
       ws.current.close(); // 기존 WebSocket 연결 종료
     }
 
-    ws.current = new WebSocket('ws://localhost:8081');
+    ws.current = new WebSocket(WS_URL);
     ws.current.onopen = () => {
       if (ws.current.isTimedOut) {
         console.log(`타임아웃된 클라이언트의 재연결을 차단: ${nickname}`);
