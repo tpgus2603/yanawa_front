@@ -727,7 +727,7 @@ function ChattingDetail() {
     // 공지사항 목록 가져오기
     const fetchNotices = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/chat/${chatRoomId}/notices`);
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/chat/${chatRoomId}/notices`);
         if (response.ok) {
           const data = await response.json();
           setNotices(data); // 공지사항 목록 업데이트
