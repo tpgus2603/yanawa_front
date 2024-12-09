@@ -121,7 +121,7 @@ export const getAllFriends = async (page = 0, size = 10) => {
  * @returns {Promise<Object>} - 삭제 결과 데이터
  */
 export const deleteFriend = async (friendId) => {
-  const response = await fetch(`${BASE_URL}/api/friends/${friendId}`, {
+  const response = await fetch(`${BASE_URL}/api/friend/${friendId}`, {
     method: "DELETE",
   });
 
