@@ -945,14 +945,15 @@ function ChattingDetail() {
               }
             );
 
-            // const prevMessageTime =
-            //   prevMessage &&
-            //   new Date(prevMessage.timestamp).toLocaleTimeString([], {
-            //     hour: "2-digit",
-            //     minute: "2-digit",
-            //   });
+            const prevMessageTime =
+              prevMessage &&
+              new Date(prevMessage.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
 
-            // const isNewMinute = !prevMessage || messageTime !== prevMessageTime;
+            // 새로운 분 단위 메시지인지 확인
+            const isNewMinute = !prevMessage || messageTime !== prevMessageTime;
             const isLastMessageInGroup = !sameSenderAsNext;
             const isDifferentUserFromPrev = !sameSenderAsPrev;
 
@@ -966,6 +967,7 @@ function ChattingDetail() {
 
             return (
               <div key={index}>
+                {/* 이전 사용자와 다르거나 분이 달라지면 이름 표시 */}
                 {isDifferentUserFromPrev && !isMine && (
                   <strong
                     style={{
@@ -1021,8 +1023,8 @@ function ChattingDetail() {
                         {unreadCountValue > 0 && `${unreadCountValue}`}
                       </span>
                     </div>
-
-                    {isLastMessageInGroup && (
+                    {/* 분 단위가 다르면 시간 표시 */}
+                    {(isNewMinute || isLastMessageInGroup) && (
                       <MessageTimestamp isMine={isMine}>
                         {messageTime}
                       </MessageTimestamp>
