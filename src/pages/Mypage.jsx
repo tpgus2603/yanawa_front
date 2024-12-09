@@ -179,6 +179,7 @@ const MyPage = () => {
       setFriends((prev) =>
         prev.filter((friend) => friend.friendInfo.id !== friendId)
       );
+      alert("성공적으로 삭제되었습니다.");
     } catch (error) {
       console.error("Failed to delete friend:", error);
     }
