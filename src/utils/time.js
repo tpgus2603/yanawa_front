@@ -23,3 +23,9 @@ export const convertIndexToTime = (timeIndex) => {
     .padStart(2, "0")}`;
   return `${day} ${time}`;
 };
+
+export const convertTimeToIndex = (day, hour, minute) => {
+  const dayIndex = days.indexOf(day);
+  const timeIndex = Math.floor((hour * 60 + minute) / 15);
+  return dayIndex * 24 * 4 + timeIndex;
+};

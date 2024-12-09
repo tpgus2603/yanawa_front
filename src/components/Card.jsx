@@ -18,7 +18,15 @@ const cardVariants = cva("w-full rounded-xl shadow-lg p-4 overflow-hidden", {
   },
 });
 
-export default function Card({ meeting, theme = "black", onJoin, onClick }) {
+export default function Card({
+  meeting,
+  theme = "black",
+  onClick,
+  onJoin,
+  onDelete,
+  onClose,
+  onLeave,
+}) {
   const {
     title,
     timeIdxStart,
@@ -27,13 +35,19 @@ export default function Card({ meeting, theme = "black", onJoin, onClick }) {
     creatorName,
     time_idx_deadline,
     type,
+    isParticipant,
+    isScheduleConflict,
   } = meeting;
 
   const variantClass = cardVariants({
-    theme: type === "CLOSE" ? "gray" : theme,
+    theme:
+      !isParticipant && !isScheduleConflict && type === "OPEN" ? "mix" : theme,
   });
 
   // 시간 변환
+  // const userName = localStorage.getItem("nickname");
+  const userName = "윤석찬";
+
   const startTime = convertIndexToTime(timeIdxStart);
   const endTime = convertIndexToTime(timeIdxEnd);
   const deadlineTime = convertIndexToTime(time_idx_deadline);
@@ -53,15 +67,62 @@ export default function Card({ meeting, theme = "black", onJoin, onClick }) {
       <Label size="sm" theme="black">
         주최자: {creatorName}
       </Label>
-      <div className="flex justify-between mt-4">
-        <span className={`text-sm ${type === "OPEN" ? "text-green-500" : "text-red-500"}`}>
-          {type === "OPEN" ? "참여 가능" : "참여 마감"}
-        </span>
-        {type === "OPEN" && (
-          <Button size="sm" theme="mix" onClick={onJoin}>
-            참가하기
-          </Button>
-        )}
+      <div className="flex items-end justify-between mt-4">
+        <div className="flex gap-2">
+          <Label
+            className={`${type === "OPEN" ? "text-green-500" : "text-red-500"}`}
+            size="sm"
+            theme="graysolid"
+          >
+            {type}
+          </Label>
+          {isParticipant && (
+            <Label size="sm" theme="graysolid">
+              참여중
+            </Label>
+          )}
+          {isScheduleConflict && (
+            <Label className="text-warning" size="sm" theme="graysolid">
+              시간표 충돌
+            </Label>
+          )}
+        </div>
+
+        {type === "OPEN" ? (
+          <>
+            {isParticipant ? (
+              <>
+                {creatorName === userName ? (
+                  <div className="flex gap-2">
+                    <Button size="sm" theme="black" onClick={onClose}>
+                      마감
+                    </Button>
+                    <Button size="sm" theme="pink" onClick={onDelete}>
+                      삭제
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <Button size="sm" theme="white" onClick={onLeave}>
+                      나가기
+                    </Button>
+                  </>
+                )}
+              </>
+            ) : (
+              <Button
+                size="sm"
+                theme="white"
+                state={
+                  isParticipant || isScheduleConflict ? "disable" : "default"
+                }
+                onClick={onJoin}
+              >
+                참가하기
+              </Button>
+            )}
+          </>
+        ) : null}
       </div>
     </div>
   );
