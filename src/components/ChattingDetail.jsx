@@ -767,6 +767,28 @@ function ChattingDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatRoomId]); // chatRoomId 변경 또는 컴포넌트 언마운트 시 실행
 
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+
+    localStorage.setItem(
+      `loadedPreviousMessages-${chatRoomId}`,
+      "true"
+    );
+
+    const hasLoadedPreviousMessages = localStorage.getItem(
+      `loadedPreviousMessages-${chatRoomId}`
+    );
+
+    if (!hasLoadedPreviousMessages && lastMessage && lastMessage.type === "previousMessages") {
+      return; // 이전 메시지일 경우 자동 스크롤 방지
+    }
+
+    // 새 메시지 수신 시 자동으로 아래로 스크롤
+    if (lastMessage && lastMessage.type === "message" && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, chatRoomId]);
+
   const highlightSearchTerm = (message) => {
     if (!searchTerm) return message;
 
@@ -792,11 +814,9 @@ function ChattingDetail() {
         <Button
           size="lg"
           theme="pink"
-          icon={<FaSearch />} 
+          icon={<FaSearch />}
           onClick={toggleSearchBar}
-        >
-          
-        </Button>
+        ></Button>
       </ChatRoomHeader>
 
       {/* 공지사항 */}
@@ -807,9 +827,7 @@ function ChattingDetail() {
               <NoticeMessage isCollapsed={isNoticeCollapsed} onClick={handleNoticeClick}>
                 📢 {notice?.message}
               </NoticeMessage>
-              <NoticeSender>
-                {notice?.sender}
-              </NoticeSender>
+              <NoticeSender>{notice?.sender}</NoticeSender>
               <NoticeActions>
                 <button onClick={handleNoticeCollapse}>접어두기</button>
                 <button onClick={handleDismissNotice}>다시 열지 않음</button>
@@ -856,78 +874,153 @@ function ChattingDetail() {
       )}
 
       {isSearching && (
-      <FixedSearchBar>
-        <input
-          ref={searchInputRef}
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={handleSearch}
-          placeholder="대화 내용 검색"
-        />
-        <div className="arrow-buttons">
-          <FaArrowUp
-            onClick={handleArrowUp}
-            size={20}
-            style={{ pointerEvents: currentSearchIndex > 0 ? 'auto' : 'none', opacity: currentSearchIndex > 0 ? 1 : 0.5 }}
+        <FixedSearchBar>
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleSearch}
+            placeholder="대화 내용 검색"
+            className="flex-[1.2] px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-3"
           />
-          <FaArrowDown
-            onClick={handleArrowDown}
-            size={20}
-            style={{
-              pointerEvents: currentSearchIndex < searchResults.length - 1 ? 'auto' : 'none',
-              opacity: currentSearchIndex < searchResults.length - 1 ? 1 : 0.5,
-            }}
-          />
-        </div>
-        {searchResults.length === 0 && (
-          <p style={{ color: 'gray', fontSize: '0.9em', textAlign: 'center', marginTop: '10px' }}>
-            더 이상 검색 결과가 없습니다.
-          </p>
-        )}
-      </FixedSearchBar>
-    )}
+          <div className="flex items-center space-x-1">
+            <Button
+              size="sm"
+              theme="purple"
+              onClick={handleArrowUp}
+              state={currentSearchIndex > 0 ? "default" : "disable"}
+              icon={<FaArrowUp />}
+            />
+            <Button
+              size="sm"
+              theme="purple"
+              onClick={handleArrowDown}
+              state={
+                currentSearchIndex < searchResults.length - 1 ? "default" : "disable"
+              }
+              icon={<FaArrowDown />}
+            />
+            <Button
+              size="sm"
+              theme="black"
+              onClick={() => {
+                setSearchTerm("");
+                setSearchResults([]);
+                setCurrentSearchIndex(0);
+                setIsSearching(false);
+              }}
+            >
+              닫기
+            </Button>
+          </div>
+        </FixedSearchBar>
+      )}
 
       <ChatRoomMessages>
         {messages.length === 0 ? (
           <p>메시지가 없습니다.</p>
         ) : (
           messages.map((messageData, index) => {
+            const isMine = messageData.sender === loggedInUser;
+            const prevMessage = messages[index - 1];
+            const nextMessage = messages[index + 1];
+
+            // 이전 메시지와 비교
+            const sameSenderAsPrev =
+              prevMessage && prevMessage.sender === messageData.sender;
+
+            // 다음 메시지와 비교
+            const sameSenderAsNext =
+              nextMessage && nextMessage.sender === messageData.sender;
+
+            // 현재 메시지의 타임스탬프
+            const messageTime = new Date(messageData.timestamp).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            // 이전 메시지의 타임스탬프
+            const prevMessageTime =
+              prevMessage &&
+              new Date(prevMessage.timestamp).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+
+            // 새로운 분 단위 메시지인지 확인
+            const isNewMinute = !prevMessage || messageTime !== prevMessageTime;
+
+            // 마지막 메시지인지 확인
+            const isLastMessageInGroup = !sameSenderAsNext || messageTime !== nextMessage.timestamp;
+
             if (messageData.type === "join" || messageData.type === "leave") {
               return (
                 <CenteredMessage key={index}>{messageData.message}</CenteredMessage>
               );
             }
 
+            // 읽지 않은 사람 수
+            const unreadCountValue = unreadCount(messageData._id);
+
             return (
-              <MessageContainer
-                key={index}
-                isMine={messageData.sender === loggedInUser}
-                highlighted={searchResults[currentSearchIndex] === messageData}
-                ref={
-                  searchResults[currentSearchIndex] === messageData
-                    ? highlightedMessageRef
-                    : null
-                }
-              >
-                <MessageBubble 
-                  isMine={messageData.sender === loggedInUser}
-                  onContextMenu={(e) => handleRightClick(e, messageData)}  
-                > 
-                  <div>
-                    {messageData.sender !== loggedInUser && (
-                      <strong>{messageData.sender}</strong>
+              <div key={index}>
+                {isNewMinute && !isMine && (
+                  <strong
+                    style={{
+                      display: "block",
+                      marginBottom: "2px",
+                      fontSize: "0.9em",
+                      color: "#555",
+                    }}
+                  >
+                    {messageData.sender}
+                  </strong>
+                )}
+                <MessageContainer
+                  isMine={isMine}
+                  highlighted={searchResults[currentSearchIndex] === messageData}
+                  ref={searchResults[currentSearchIndex] === messageData ? highlightedMessageRef : null}
+                  style={{
+                    marginTop: sameSenderAsPrev ? "-16px" : "8px",
+                    justifyContent: isMine ? "flex-end" : "flex-start",
+                  }}
+                >
+                  <MessageBubble
+                    isMine={isMine}
+                    highlighted={searchResults[currentSearchIndex] === messageData}
+                    onContextMenu={(e) => handleRightClick(e, messageData)}
+                    style={{
+                      textAlign: isMine ? "right" : "left",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: isMine ? "flex-end" : "flex-start",
+                      }}
+                    >
+                      {highlightSearchTerm(messageData.message)}
+                      <span
+                        style={{
+                          marginLeft: isMine ? "0" : "16px",
+                          marginRight: isMine ? "16px" : "0",
+                          fontSize: "0.8em",
+                          color: "gray",
+                        }}
+                      >
+                        {unreadCountValue > 0 && `${unreadCountValue}`}
+                      </span>
+                    </div>
+                    {isLastMessageInGroup && (
+                      <MessageTimestamp isMine={isMine}>
+                        {messageTime}
+                      </MessageTimestamp>
                     )}
-                    {highlightSearchTerm(messageData.message)}
-                  </div>
-                  <MessageTimestamp isMine={messageData.sender === loggedInUser}>
-                    {new Date(messageData.timestamp).toLocaleTimeString()}
-                    <span>{` (${unreadCount(
-                      messageData._id
-                    )}명이 읽지 않음)`}</span>
-                  </MessageTimestamp>
-                </MessageBubble>
-              </MessageContainer>
+                  </MessageBubble>
+                </MessageContainer>
+              </div>
             );
           })
         )}
@@ -941,11 +1034,20 @@ function ChattingDetail() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="메시지를 입력하세요"
           onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+          className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
-        <button onClick={sendMessage}>전송</button>
+        <Button
+          size="lg"
+          theme="pink"
+          state={input.trim() ? "default" : "disable"}
+          onClick={sendMessage}
+          className="ml-3"
+        >
+          전송
+        </Button>
       </ChatRoomInput>
     </ChatRoomContainer>
-  );
+  );  
 }
 
 export default ChattingDetail;
