@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 
+// 웹소켓 서버 연결 URL
+const WS_URL = process.env.REACT_APP_WS_URL;
+
 function ChattingList() {
   const [rooms, setRooms] = useState([]);
   const [joinedRooms, setJoinedRooms] = useState([]);
@@ -13,7 +16,7 @@ function ChattingList() {
 
   // WebSocket 연결 및 실시간 업데이트
   const setupWebSocket = () => {
-    ws.current = new WebSocket('ws://localhost:8081'); // WebSocket 연결
+    ws.current = new WebSocket(WS_URL); // WebSocket 연결
 
     ws.current.onopen = () => {
       console.log('WebSocket 연결 성공');
