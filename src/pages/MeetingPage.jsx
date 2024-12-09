@@ -298,7 +298,14 @@ const MeetingPage = () => {
       <CreateMeetingModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
+        onMeetingCreated={async () => {
+          const updatedData = await getAllMeetings(0, meetingPage * 20);
+          setMeetings(updatedData.content);
+          const updatedMyData = await getMyMeetings(0, myMeetingPage * 20);
+          setMyMeetings(updatedMyData.content);
+        }}
       />
+
       <MeetingDetailModal
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
