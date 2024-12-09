@@ -90,7 +90,7 @@ const MyPage = () => {
       }
     };
     if (activeTab === "friends") fetchSentRequests();
-  }, [activeTab, sentRequests]);
+  }, [activeTab]);
 
   // 받은 친구 요청 조회
   useEffect(() => {
@@ -104,7 +104,7 @@ const MyPage = () => {
       }
     };
     if (activeTab === "friends") fetchReceivedRequests();
-  }, [activeTab, receivedRequests]);
+  }, [activeTab]);
 
   // 친구 목록 무한스크롤 처리
   useEffect(() => {
