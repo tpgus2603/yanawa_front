@@ -27,7 +27,7 @@ export const sendFriendRequest = async (requestData) => {
  * @returns {Promise<Object[]>} - 받은 친구 요청 리스트
  */
 export const getReceivedFriendRequests = async () => {
-  const response = await fetch(`${BASE_URL}/api/friend/requests/received`, {
+  const response = await fetch(`${BASE_URL}/api/friend/request/received`, {
     method: "GET",
   });
 
@@ -43,7 +43,7 @@ export const getReceivedFriendRequests = async () => {
  * @returns {Promise<Object[]>} - 보낸 친구 요청 리스트
  */
 export const getSentFriendRequests = async () => {
-  const response = await fetch(`${BASE_URL}/api/friend/requests/sent`, {
+  const response = await fetch(`${BASE_URL}/api/friend/request/sent`, {
     method: "GET",
   });
 
@@ -61,7 +61,7 @@ export const getSentFriendRequests = async () => {
  */
 export const acceptFriendRequest = async (requesterId) => {
   const response = await fetch(
-    `${BASE_URL}/api/friend/requests/${requesterId}/accept`,
+    `${BASE_URL}/api/friend/request/${requesterId}/accept`,
     {
       method: "POST",
     }
@@ -81,7 +81,7 @@ export const acceptFriendRequest = async (requesterId) => {
  */
 export const rejectFriendRequest = async (requesterId) => {
   const response = await fetch(
-    `${BASE_URL}/api/friend/requests/${requesterId}/reject`,
+    `${BASE_URL}/api/friend/request/${requesterId}/reject`,
     {
       method: "POST",
     }

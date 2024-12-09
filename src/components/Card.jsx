@@ -50,6 +50,9 @@ export default function Card({ meeting, theme = "black", onJoin, onClick }) {
       <Label size="sm" theme="black">
         마감 시간: {deadlineTime}
       </Label>
+      <Label size="sm" theme="black">
+        주최자: {creatorName}
+      </Label>
       <div className="flex justify-between mt-4">
         <span className={`text-sm ${type === "OPEN" ? "text-green-500" : "text-red-500"}`}>
           {type === "OPEN" ? "참여 가능" : "참여 마감"}

@@ -21,7 +21,7 @@ export default function HeaderNav() {
 
   const navigateToTimeTable = () => navigate("/timetable");
   const navigateToHome = () => navigate("/");
-  const navigateToChattingList = () => navigate("/chattings");
+  // const navigateToChattingList = () => navigate("/chattings");
   const navigateToMeetings = () => navigate("/meeting");
   const navigateToLogin = () => navigate("/login");
   const navigateToMyPage = () => navigate("/mypage");
@@ -48,7 +48,7 @@ export default function HeaderNav() {
                 size="icon"
                 theme="mix"
                 icon={<ChatIcon />}
-                onClick={navigateToChattingList}
+                onClick={navigateToMeetings}
               />
               {user ? (
                 <Button
