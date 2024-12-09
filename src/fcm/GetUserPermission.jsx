@@ -33,7 +33,7 @@ const GetUserPermission = async () => {
         if (!isFCMToken) {
           await GetFCMToken();
           Toast.fire({
-            icon: "error",
+            icon: "info",
             title: `알림 토큰 저장 중`,
           });
         } else {
