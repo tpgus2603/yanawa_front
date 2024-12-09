@@ -75,7 +75,7 @@ const MyPage = () => {
     };
 
     if (activeTab === "chatting") fetchMeetings();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, meetingPage, meetingHasNext, meetingIsLoading]);
 
   // 보낸 친구 요청 조회
@@ -132,7 +132,7 @@ const MyPage = () => {
     };
 
     if (activeTab === "friends") fetchFriends();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, hasNext, activeTab, isLoading]);
 
   // 친구 요청 보내기
@@ -176,7 +176,9 @@ const MyPage = () => {
   const handleDeleteFriend = async (friendId) => {
     try {
       await deleteFriend(friendId);
-      setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
+      setFriends((prev) =>
+        prev.filter((friend) => friend.friendInfo.id !== friendId)
+      );
     } catch (error) {
       console.error("Failed to delete friend:", error);
     }
@@ -331,7 +333,7 @@ const MyPage = () => {
                     <Button
                       size="sm"
                       theme="black"
-                      onClick={() => handleDeleteFriend(friend.id)}
+                      onClick={() => handleDeleteFriend(friend.friendInfo.id)}
                     >
                       삭제
                     </Button>
