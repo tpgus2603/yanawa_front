@@ -34,7 +34,7 @@ const GetUserPermission = async () => {
           await GetFCMToken();
           Toast.fire({
             icon: "error",
-            title: `알림 토큰 저장 실패`,
+            title: `알림 토큰 저장 중`,
           });
         } else {
           console.log("token setting complete");
