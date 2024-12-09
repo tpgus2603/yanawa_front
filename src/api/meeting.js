@@ -1,45 +1,52 @@
-// src/api/meeting.js
-
 // 기본 API URL
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-// 번개 모임 조회
-export const fetchMyMeetings = async (page = 0, size = 20) => {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/api/meeting?page=${page}&size=${size}`,// 내가 참여한 번개 모임 목록 조회할거면 my
-      {
-        method: "GET",
-        credentials: "include", // 세션 기반 인증을 위해 필요
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log("번개 모임 조회", response);
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+/**
+ * 모든 미팅 불러오기
+ * @param {number} page - 페이지 번호 (기본값: 0)
+ * @param {number} size - 페이지 크기 (기본값: 20)
+ * @returns {Promise<Object>} - 미팅 데이터
+ */
+export const getAllMeetings = async (page = 0, size = 20) => {
+  const response = await fetch(
+    `${BASE_URL}/api/meeting?page=${page}&size=${size}`,
+    {
+      method: "GET",
     }
+  );
 
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error("Failed to fetch meetings.");
-    }
-
-    return result.data; // 서버에서 제공된 데이터 반환
-  } catch (error) {
-    console.error("Error fetching my meetings:", error);
-    throw error;
+  if (!response.ok) {
+    throw new Error("Failed to fetch meetings");
   }
+
+  return (await response.json()).data;
 };
 
-// 번개 모임 생성
+/**
+ * 모임 상세 조회
+ * @param {number} meetingId - 조회할 모임 ID
+ * @returns {Promise<Object>} - 모임 상세 데이터
+ */
+export const getMeetingDetails = async (meetingId) => {
+  const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch meeting details");
+  }
+
+  return (await response.json()).data;
+};
+
+/**
+ * 미팅 생성
+ * @param {Object} meetingData - 미팅 생성에 필요한 데이터
+ * @returns {Promise<Object>} - 생성된 미팅 데이터
+ */
 export const createMeeting = async (meetingData) => {
   const response = await fetch(`${BASE_URL}/api/meeting`, {
     method: "POST",
-    credentials: "include", // 세션 기반 인증
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,24 +54,91 @@ export const createMeeting = async (meetingData) => {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to create meeting: ${response.status}`);
+    throw new Error("Failed to create meeting");
   }
 
   return await response.json();
 };
 
-// 번개 모임 참가
+/**
+ * 미팅 참가하기
+ * @param {number} meetingId - 참가할 미팅 ID
+ * @returns {Promise<Object>} - 참가 결과 메시지
+ */
 export const joinMeeting = async (meetingId) => {
   const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}/join`, {
     method: "POST",
-    credentials: "include", // 세션 기반 인증
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to join meeting: ${response.status}`);
+    throw new Error("Failed to join meeting");
+  }
+
+  return await response.json();
+};
+
+/**
+ * 내가 참가한 미팅 불러오기
+ * @param {number} page - 페이지 번호 (기본값: 0)
+ * @param {number} size - 페이지 크기 (기본값: 20)
+ * @returns {Promise<Object>} - 참가한 미팅 데이터
+ */
+export const getMyMeetings = async (page = 0, size = 20) => {
+  const response = await fetch(
+    `${BASE_URL}/api/meeting/my?page=${page}&size=${size}`,
+    {
+      method: "GET",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch my meetings");
+  }
+
+  return (await response.json()).data;
+};
+
+/**
+ * 모임 탈퇴
+ * @param {number} meetingId - 탈퇴할 모임 ID
+ * @returns {Promise<Object>} - 탈퇴 결과 메시지
+ */
+export const leaveMeeting = async (meetingId) => {
+  const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}/leave`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to leave meeting");
+  }
+
+  return await response.json();
+};
+
+/**
+ * 모임 마감
+ * @param {number} meetingId - 마감할 모임 ID
+ * @returns {Promise<Object>} - 마감 결과 메시지 및 업데이트된 모임 데이터
+ */
+export const closeMeeting = async (meetingId) => {
+  const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}/close`, {
+    method: "PUT",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to close meeting");
+  }
+
+  return await response.json();
+};
+
+export const deleteMeeting = async (meetingId) => {
+  const response = await fetch(`${BASE_URL}/api/meeting/${meetingId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete meeting");
   }
 
   return await response.json();

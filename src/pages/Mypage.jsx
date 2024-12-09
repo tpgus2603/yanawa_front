@@ -11,8 +11,6 @@ import {
 } from "../api/friend";
 import Button from "../components/Button";
 import LogoIcon from "../components/icons/LogoIcon";
-import { fetchMyMeetings } from "../api/meeting";
-// import Card from "../components/Card";
 import ChattingList from "../components/ChattingList";
 import { useNavigate } from "react-router-dom";
 
@@ -26,11 +24,6 @@ const MyPage = () => {
   const [page, setPage] = useState(0); // 친구 목록 페이지
   const [hasNext, setHasNext] = useState(true); // 페이지네이션 상태
   const [isLoading, setIsLoading] = useState(false);
-
-  const [meetings, setMeetings] = useState([]);
-  const [meetingPage, setMeetingPage] = useState(0);
-  const [meetingHasNext, setMeetingHasNext] = useState(true);
-  const [meetingIsLoading, setMeetingIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const navigate = useNavigate();
@@ -54,29 +47,6 @@ const MyPage = () => {
 
     fetchUserSession();
   }, [fetchSession, navigate]); // 페이지 마운트 시 실행
-
-  // 번개 모임 가져오기
-  useEffect(() => {
-    const fetchMeetings = async () => {
-      if (!meetingHasNext || meetingIsLoading || hasError) return;
-
-      try {
-        setMeetingIsLoading(true);
-        const data = await fetchMyMeetings(meetingPage, 20);
-        setMeetings((prev) => [...prev, ...data.content]);
-        setMeetingHasNext(data.meetingHasNext);
-        setMeetingPage((prev) => prev + 1);
-      } catch (error) {
-        setHasError(true);
-        console.error("Failed to fetch meetings:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (activeTab === "chatting") fetchMeetings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, meetingPage, meetingHasNext, meetingIsLoading]);
 
   // 보낸 친구 요청 조회
   useEffect(() => {
@@ -224,18 +194,9 @@ const MyPage = () => {
       {/* 번개 모임 탭 */}
       {activeTab === "chatting" && (
         <div className="p-4">
-          {meetings.length === 0 && !isLoading && (
-            <p className="text-center">참여 중인 채팅방이 없습니다.</p>
-          )}
           <div className="w-full">
             <ChattingList />
           </div>
-          {isLoading && <p className="text-center">로딩 중...</p>}
-          {!hasNext && meetings.length > 0 && (
-            <p className="text-sm text-center text-gray-500">
-              더 이상 불러올 번개 모임이 없습니다.
-            </p>
-          )}
         </div>
       )}
 
