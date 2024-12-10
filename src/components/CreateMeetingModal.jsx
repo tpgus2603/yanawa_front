@@ -15,9 +15,6 @@ const CreateMeetingModal = ({ isOpen, onClose, onMeetingCreated }) => {
   const [dayEnd, setDayEnd] = useState("월");
   const [hourEnd, setHourEnd] = useState("0");
   const [minuteEnd, setMinuteEnd] = useState("0");
-  const [dayDeadline, setDayDeadline] = useState("월");
-  const [hourDeadline, setHourDeadline] = useState("0");
-  const [minuteDeadline, setMinuteDeadline] = useState("0");
   const [maxNum, setMaxNum] = useState("1");
 
   const minutes = ["0", "15", "30", "45"];
