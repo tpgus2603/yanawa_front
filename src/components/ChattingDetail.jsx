@@ -1139,14 +1139,14 @@ function ChattingDetail() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="메시지를 입력하세요"
           onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-          className="flex-1 w-3/4 px-4 py-2 border rounded-md tablet:w-auto focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-3/4 px-4 py-2 border rounded-md tablet:w-auto tablet:flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <Button
           size="lg"
           theme="pink"
           state={input.trim() ? "default" : "disable"}
           onClick={sendMessage}
-          className="flex items-center justify-center flex-1 w-1/4 ml-3 tablet:w-16 tablet:flex-initial whitespace-nowrap" // w-32로 버튼 너비 설정
+          className="flex items-center justify-center w-1/4 ml-3 tablet:w-16 whitespace-nowrap" // w-32로 버튼 너비 설정
         >
           전송
         </Button>
