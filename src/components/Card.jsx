@@ -56,7 +56,9 @@ export default function Card({
 
   return (
     <div className={cn(variantClass)} onClick={onDetail}>
-      <h3 className="mb-2 text-xl font-bold">{title}</h3>
+      <h3 className="mb-2 text-xl font-bold" onClick={onDetail}>
+        {title}
+      </h3>
       <Label size="sm" theme="black">
         장소: {location}
       </Label>
