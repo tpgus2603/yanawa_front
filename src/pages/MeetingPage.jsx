@@ -127,6 +127,7 @@ const MeetingPage = () => {
       const meetingDetail = await getMeetingDetails(meetingId);
       setSelectedMeeting(meetingDetail);
       setShowDetailModal(true);
+      console.log(meetingDetail);
     } catch (error) {
       alert("번개 모임 상세 정보 불러오기 실패했습니다.");
       console.error("Error fetching meeting detail:", error);
