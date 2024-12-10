@@ -39,9 +39,9 @@ const CreateMeetingModal = ({ isOpen, onClose, onMeetingCreated }) => {
         parseInt(minuteEnd)
       );
       const time_idx_deadline = convertTimeToIndex(
-        dayDeadline,
-        parseInt(hourDeadline),
-        parseInt(minuteDeadline)
+        dayStart,
+        parseInt(hourStart),
+        parseInt(minuteStart)
       );
 
       const meetingData = {
@@ -192,46 +192,6 @@ const CreateMeetingModal = ({ isOpen, onClose, onMeetingCreated }) => {
             <select
               value={minuteEnd}
               onChange={(e) => setMinuteEnd(e.target.value)}
-              className="p-2 border rounded"
-            >
-              {minutes.map((minute) => (
-                <option key={minute} value={minute}>
-                  {minute}분
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          <label className="block mb-2 font-semibold">
-            참가 마감 시간 (선택)
-          </label>
-          <div className="flex items-center gap-2">
-            <select
-              value={dayDeadline}
-              onChange={(e) => setDayDeadline(e.target.value)}
-              className="p-2 border rounded"
-            >
-              {days.map((day) => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select>
-            <select
-              value={hourDeadline}
-              onChange={(e) => setHourDeadline(e.target.value)}
-              className="p-2 border rounded"
-            >
-              {hours.map((hour) => (
-                <option key={hour} value={hour}>
-                  {hour}시
-                </option>
-              ))}
-            </select>
-            <select
-              value={minuteDeadline}
-              onChange={(e) => setMinuteDeadline(e.target.value)}
               className="p-2 border rounded"
             >
               {minutes.map((minute) => (
