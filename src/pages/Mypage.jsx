@@ -121,22 +121,19 @@ const MyPage = () => {
   const handleAcceptRequest = async (requesterId) => {
     try {
       await acceptFriendRequest(requesterId);
+      alert("친구 요청을 수락했습니다.");
+
+      // 받은 요청 상태 업데이트
       setReceivedRequests((prev) =>
         prev.filter((request) => request.requester.id !== requesterId)
       );
-      setIsLoading(true);
-      const response = await getAllFriends(page, 10);
 
-      const content = Array.isArray(response?.content) ? response.content : [];
-      const nextPage = response?.hasNext ?? false;
-
-      setFriends((prev) => [...prev, ...content]);
-      setHasNext(nextPage);
-      setPage((prev) => prev + 1);
+      // 친구 목록 동기화
+      const response = await getAllFriends(0, (page + 1) * 10);
+      setFriends(response.content);
+      setHasNext(response.hasNext);
     } catch (error) {
       console.error("Failed to accept request:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -144,9 +141,17 @@ const MyPage = () => {
   const handleRejectRequest = async (requesterId) => {
     try {
       await rejectFriendRequest(requesterId);
+      alert("친구 요청을 거절했습니다.");
+
+      // 받은 요청 상태 업데이트
       setReceivedRequests((prev) =>
         prev.filter((request) => request.requester.id !== requesterId)
       );
+
+      // 친구 목록 동기화
+      const response = await getAllFriends(0, (page + 1) * 10);
+      setFriends(response.content);
+      setHasNext(response.hasNext);
     } catch (error) {
       console.error("Failed to reject request:", error);
     }
@@ -156,10 +161,12 @@ const MyPage = () => {
   const handleDeleteFriend = async (friendId) => {
     try {
       await deleteFriend(friendId);
-      setFriends((prev) =>
-        prev.filter((friend) => friend.friendInfo.id !== friendId)
-      );
-      alert("성공적으로 삭제되었습니다.");
+      alert("친구를 삭제했습니다.");
+
+      // 친구 목록 동기화
+      const response = await getAllFriends(0, (page + 1) * 10);
+      setFriends(response.content);
+      setHasNext(response.hasNext);
     } catch (error) {
       console.error("Failed to delete friend:", error);
     }

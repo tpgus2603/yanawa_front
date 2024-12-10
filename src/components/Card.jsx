@@ -24,7 +24,7 @@ const cardVariants = cva(
 export default function Card({
   meeting,
   theme = "black",
-  onClick,
+  onDetail,
   onJoin,
   onDelete,
   onClose,
@@ -55,7 +55,7 @@ export default function Card({
   const deadlineTime = convertIndexToTime(time_idx_deadline);
 
   return (
-    <div className={cn(variantClass)} onClick={onClick} role="button">
+    <div className={cn(variantClass)} onClick={onDetail}>
       <h3 className="mb-2 text-xl font-bold">{title}</h3>
       <Label size="sm" theme="black">
         장소: {location}

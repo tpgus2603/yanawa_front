@@ -112,13 +112,10 @@ const MeetingPage = () => {
       alert("번개 모임에 성공적으로 참가했습니다!");
 
       // 최신 데이터 다시 가져오기
-      if (activeTab === "all") {
-        const updatedData = await getAllMeetings(0, meetingPage * 20);
-        setMeetings(updatedData.content);
-      } else if (activeTab === "my") {
-        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
-        setMyMeetings(updatedData.content);
-      }
+      const updatedAllMeetingData = await getAllMeetings(0, meetingPage * 20);
+      setMeetings(updatedAllMeetingData.content);
+      const updatedMyMeetingData = await getMyMeetings(0, myMeetingPage * 20);
+      setMyMeetings(updatedMyMeetingData.content);
     } catch (error) {
       alert("번개 모임 참가에 실패했습니다.");
       console.error("Error joining meeting:", error);
@@ -143,13 +140,10 @@ const MeetingPage = () => {
       alert("번개 모임을 삭제했습니다!");
 
       // 최신 데이터 다시 가져오기
-      if (activeTab === "all") {
-        const updatedData = await getAllMeetings(0, meetingPage * 20);
-        setMeetings(updatedData.content);
-      } else if (activeTab === "my") {
-        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
-        setMyMeetings(updatedData.content);
-      }
+      const updatedAllMeetingData = await getAllMeetings(0, meetingPage * 20);
+      setMeetings(updatedAllMeetingData.content);
+      const updatedMyMeetingData = await getMyMeetings(0, myMeetingPage * 20);
+      setMyMeetings(updatedMyMeetingData.content);
     } catch (error) {
       alert("번개 모임 삭제에 실패했습니다.");
       console.error("Error deleting meeting:", error);
@@ -163,13 +157,10 @@ const MeetingPage = () => {
       alert("번개 모임을 나갔습니다!");
 
       // 최신 데이터 다시 가져오기
-      if (activeTab === "all") {
-        const updatedData = await getAllMeetings(0, meetingPage * 20);
-        setMeetings(updatedData.content);
-      } else if (activeTab === "my") {
-        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
-        setMyMeetings(updatedData.content);
-      }
+      const updatedAllMeetingData = await getAllMeetings(0, meetingPage * 20);
+      setMeetings(updatedAllMeetingData.content);
+      const updatedMyMeetingData = await getMyMeetings(0, myMeetingPage * 20);
+      setMyMeetings(updatedMyMeetingData.content);
     } catch (error) {
       alert("번개 모임 나가기에 실패했습니다.");
       console.error("Error leaving meeting:", error);
@@ -183,13 +174,10 @@ const MeetingPage = () => {
       alert("번개 모임을 마감했습니다!");
 
       // 최신 데이터 다시 가져오기
-      if (activeTab === "all") {
-        const updatedData = await getAllMeetings(0, meetingPage * 20);
-        setMeetings(updatedData.content);
-      } else if (activeTab === "my") {
-        const updatedData = await getMyMeetings(0, myMeetingPage * 20);
-        setMyMeetings(updatedData.content);
-      }
+      const updatedAllMeetingData = await getAllMeetings(0, meetingPage * 20);
+      setMeetings(updatedAllMeetingData.content);
+      const updatedMyMeetingData = await getMyMeetings(0, myMeetingPage * 20);
+      setMyMeetings(updatedMyMeetingData.content);
     } catch (error) {
       alert("번개 모임 마감에 실패했습니다.");
       console.error("Error closing meeting:", error);
@@ -245,7 +233,7 @@ const MeetingPage = () => {
                   key={meeting.id}
                   meeting={meeting}
                   theme="white"
-                  onClick={() => handleCardClick(meeting.id)}
+                  onDetail={() => handleCardClick(meeting.id)}
                   onJoin={(e) => handleJoinButtonClick(e, meeting.id)}
                   onClose={(e) => handleCloseButtonClick(e, meeting.id)}
                   onDelete={(e) => handleDeleteButtonClick(e, meeting.id)}
@@ -277,8 +265,11 @@ const MeetingPage = () => {
                   key={meeting.id}
                   meeting={meeting}
                   theme="white"
-                  onClick={() => handleCardClick(meeting.id)}
+                  onDetail={() => handleCardClick(meeting.id)}
                   onJoin={(e) => handleJoinButtonClick(e, meeting.id)}
+                  onClose={(e) => handleCloseButtonClick(e, meeting.id)}
+                  onDelete={(e) => handleDeleteButtonClick(e, meeting.id)}
+                  onLeave={(e) => handleLeaveButtonClick(e, meeting.id)}
                 />
               ))}
             </div>
