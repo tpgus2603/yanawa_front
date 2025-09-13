@@ -13,6 +13,8 @@ import Button from "../components/Button";
 import LogoIcon from "../components/icons/LogoIcon";
 import ChattingList from "../components/ChattingList";
 import { useNavigate } from "react-router-dom";
+import FriendScheduleViewer from "../components/FriendScheduleViewer";
+import { fetchFriendSchedules } from "../api/schedule";
 
 const MyPage = () => {
   const { user, fetchSession } = useAuthStore(); // Zustand 상태 및 메서드 가져오기
@@ -25,6 +27,12 @@ const MyPage = () => {
   const [hasNext, setHasNext] = useState(true); // 페이지네이션 상태
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  // 컴포넌트 내부 state
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerFriend, setViewerFriend] = useState(null);
+  const [viewerSchedules, setViewerSchedules] = useState([]);
+  const [viewerLoading, setViewerLoading] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -172,6 +180,26 @@ const MyPage = () => {
     }
   };
 
+  const handleViewFriendSchedule = async (friendObj) => {
+    const info = friendObj?.friendInfo; // 현재 friends 데이터 구조 기준
+    if (!info?.id) return;
+
+    setViewerFriend(info);
+    setViewerOpen(true);
+    setViewerLoading(true);
+    try {
+      const data = await fetchFriendSchedules(info.id);
+      setViewerSchedules(data); // [{title,is_fixed,time_indices:[...]}, ...]
+    } catch (e) {
+      console.error(e);
+      alert(e.message || "친구 시간표를 불러오지 못했습니다.");
+      // 실패 시 모달은 남겨둠(UX 선택). 닫고 싶으면 아래 주석 해제
+      // setViewerOpen(false);
+    } finally {
+      setViewerLoading(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-screen-lg min-h-screen mx-auto bg-white">
       {/* 프로필 영역 */}
@@ -309,13 +337,25 @@ const MyPage = () => {
                         {friend?.friendInfo?.email || "이메일 정보 없음"}
                       </p>
                     </div>
-                    <Button
-                      size="sm"
-                      theme="black"
-                      onClick={() => handleDeleteFriend(friend.friendInfo.id)}
-                    >
-                      삭제
-                    </Button>
+                    <div className="flex gap-2">
+                      {/* ✅ 시간표 보기 (핑크) 버튼 추가 */}
+                      <Button
+                          size="sm"
+                          theme="pink"
+                          onClick={() => handleViewFriendSchedule(friend)}
+                      >
+                        시간표
+                      </Button>
+
+                      {/* 기존 삭제 버튼 */}
+                      <Button
+                          size="sm"
+                          theme="black"
+                          onClick={() => handleDeleteFriend(friend.friendInfo.id)}
+                      >
+                        삭제
+                      </Button>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -329,6 +369,13 @@ const MyPage = () => {
           </div>
         </div>
       )}
+      <FriendScheduleViewer
+          open={viewerOpen}
+          onClose={() => setViewerOpen(false)}
+          friend={viewerFriend}
+          schedules={viewerSchedules}
+          loading={viewerLoading}
+      />
     </div>
   );
 };

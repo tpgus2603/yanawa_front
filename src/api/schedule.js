@@ -155,3 +155,28 @@ export const deleteSchedule = async (title) => {
     throw error;
   }
 };
+
+export const fetchFriendSchedules = async (friendId) => {
+  const res = await fetch(`${baseURL}/api/schedule/friend/${friendId}`, {
+    method: "GET",
+    credentials: "include", // 세션 쿠키 사용
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) {
+    // 403: 친구 아님
+    if (res.status === 403) {
+      const err = await res.json().catch(() => ({}));
+      const msg = err?.error?.message ?? "친구 관계가 아닙니다.";
+      throw new Error(msg);
+    }
+    // 404는 스펙상 안 쓰지만(백엔드가 500/200만 보냄) 방어적으로 처리
+    if (res.status === 404) return [];
+    throw new Error(`Error: ${res.status}`);
+  }
+
+  const json = await res.json();
+  if (!json.success) throw new Error("친구 시간표 조회 실패");
+  // 서버는 ScheduleResponseDTO.groupSchedules() 결과를 data.schedules로 줌
+  return json.data.schedules ?? [];
+};

@@ -25,7 +25,7 @@ const SchedulePage = () => {
 
   // 드래그 상태 추적용 ref
   const isMouseDownRef = useRef(false);
-
+  const dragModeRef = useRef(null); // 'add' | 'remove' | null
   useEffect(() => {
     const initializeSchedules = async () => {
       try {
@@ -61,6 +61,7 @@ const SchedulePage = () => {
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       isMouseDownRef.current = false;
+      dragModeRef.current = null;
     };
     window.addEventListener("mouseup", handleGlobalMouseUp);
     return () => {
@@ -105,13 +106,17 @@ const SchedulePage = () => {
       }
       // 일정이 있는 슬롯에서 드래그 선택을 진행하지 않음
       isMouseDownRef.current = false;
+      dragModeRef.current = null;
       return;
     }
+      setSelectedSchedule(null);
+      // 드래그 모드 결정: 시작 칸이 이미 선택되어 있었으면 remove, 아니면 add
+         const willRemove = selectedSlots.includes(timeIdx);
+      dragModeRef.current = willRemove ? 'remove' : 'add';
+      setSelectedSlots((prev) =>
+            willRemove ? prev.filter((idx) => idx !== timeIdx) : [...prev, timeIdx]
+              );
 
-    setSelectedSchedule(null);
-    setSelectedSlots((prev) =>
-        prev.includes(timeIdx) ? prev.filter((idx) => idx !== timeIdx) : [...prev, timeIdx]
-    );
   };
 
   // 마우스가 슬롯에 들어왔을 때 (누른 상태이면 추가)
@@ -122,14 +127,23 @@ const SchedulePage = () => {
         s.time_indices.includes(timeIdx)
     );
     if (slotInSchedule) return; // 일정 영역은 드래그로 덮어쓰지 않음
+      setSelectedSchedule(null);
+      setSelectedSlots((prev) => {
+          if (dragModeRef.current === 'add') {
+              return prev.includes(timeIdx) ? prev : [...prev, timeIdx];
+            }
+          if (dragModeRef.current === 'remove') {
+              return prev.includes(timeIdx) ? prev.filter((idx) => idx !== timeIdx) : prev;
+            }
+          return prev;
+        });
 
-    setSelectedSchedule(null);
-    setSelectedSlots((prev) => (prev.includes(timeIdx) ? prev : [...prev, timeIdx]));
   };
 
   // 마우스 업 시 드래그 종료
   const handleSlotMouseUp = () => {
     isMouseDownRef.current = false;
+    dragModeRef.current = null;
   };
 
   const handleCancelSchedule = () => {
